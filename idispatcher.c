@@ -63,6 +63,7 @@ int main( int argc, char *argv[] ) {
     char line[32];  // 32 char max
     char *token;    // for parsing input lines
     int currTime = 0;
+    int prevTime = 0;
     char event = '\0';
     int resourceNum = -1;
     int pid = 0;
@@ -79,6 +80,7 @@ int main( int argc, char *argv[] ) {
         }
 
         // parse input (time, event (& maybe resource #), process ID)
+        prevTime = currTime; // keep track of
         token = strtok(line, " ");
         currTime = atoi(token);
         token = strtok(NULL, " ");
@@ -99,8 +101,8 @@ int main( int argc, char *argv[] ) {
             pid = -1;
         }
         
-        printf("line = '%s' --> time=%d | event=%d %d| pid=%d\n", 
-                line, currTime, event, resourceNum, pid);
+        printf("line = '%s' --> time=%d | event=%d %d | pid=%d | time diff=%d\n", 
+                line, currTime, event, resourceNum, pid, currTime-prevTime);
         
     }
 
