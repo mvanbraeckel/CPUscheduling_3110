@@ -101,7 +101,7 @@ int main( int argc, char *argv[] ) {
             pid = -1;
         }
         
-        printf("line = '%s' --> time=%d | event=%d %d | pid=%d | time diff=%d\n", 
+        printf("line = '%s' --> time=%d | event=%c %d | pid=%d | time diff=%d\n", 
                 line, currTime, event, resourceNum, pid, currTime-prevTime);
         
     }
