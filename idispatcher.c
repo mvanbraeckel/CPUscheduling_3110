@@ -71,7 +71,7 @@ int main( int argc, char *argv[] ) {
     // continue getting input until a blank line is entered
     while(1) {
         fgets(line, 32, stdin);
-        flushInput(line);
+        //flushInput(line);
         printf("first char = '%c'\n", line[0]);
         // if input line is blank (empty string), stop
         if(line[0] == '\0') {
