@@ -60,6 +60,17 @@ void flushInput(char* input);
 
 // ================================================================================
 
+// create a PCB linked list node struct (it will store all the necessary data)
+
+// create a pushBack queue function
+// create a popFront queue function
+// create an insertSorted function
+//      --> because need to print output in ascending order of pid at the end)
+
+// need a var to store running PCB
+// need a list pointer for the ready queue (head and tail pointers)
+// need a list pointer for each of the 5 resource queues (head and tail pointers)
+
 int main( int argc, char *argv[] ) {
     // declare variables
     char line[32];  // 32 char max
