@@ -83,10 +83,10 @@ int main( int argc, char *argv[] ) {
         
         // print testing output
         if(event == 'T') {
-            printf("line = '%s'\t--> time = %5d | time diff = %5d | event=%c\n", 
+            printf("line = '%s'\t--> time = %5d | time diff = %5d | event = %c\n", 
                 line, currTime, currTime-prevTime, event);
         } else {
-            printf("line = '%s'\t--> time = %5d | time diff = %5d | event=%c", 
+            printf("line = '%s'\t--> time = %5d | time diff = %5d | event = %c", 
                 line, currTime, currTime-prevTime, event);
             // print the resource number if necessary
             if(event == 'R' || event == 'I') {
