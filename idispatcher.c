@@ -45,27 +45,28 @@
  */
 
 // =================================== INCLUDES ===================================
-//#include <fcntl.h> // open
-//#include <unistd.h> // read
-//#include <sys/types.h> // read
-//#include <sys/uio.h> // read
-#include <stdio.h> // fopen, fread
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-//#include <sys/time.h> // gettimeofday
 #include <string.h>
-//#include <ctype.h>
 
 // =================================== STRUCTS ====================================
 
 // ============================== FUNCTION PROTOTYPES =============================
+
 void flushInput(char* input);
 
 // ================================================================================
 
 int main( int argc, char *argv[] ) {
     // declare variables
-    char line[32]; // 32 char max
+    char line[32];  // 32 char max
+    char *token;    // for parsing input lines
+    int currTime = 0;
+    char event = '\0';
+    int resourceNum = -1;
+    int pid = 0;
+    bool riEvent = false;
 
     // continue getting input until a blank line is entered
     while(1) {
@@ -76,9 +77,26 @@ int main( int argc, char *argv[] ) {
             break;
         }
 
-        printf("line = '%s'\n", line);
+        // parse input (time, event (& maybe resource #), process ID)
+        token = strtok(line, " ");
+        currTime = atoi(token);
+        token = strtok(NULL, " ");
+        event = token[0];
+        // check if the event is R or I, in which case it is followed by an extra argument
+        if(event == 'R' || event == 'I') {
+            riEvent = true;
+            token = strtok(NULL, " ");
+            resourceNum = atoi(token);
+        } else {
+            resourceNum = -1;
+        }
+        token = strtok(NULL, " ");
+        pid = atoi(token);
+        
+        printf("line = '%s' --> time=%d | event=%d %d| pid=%d\n", 
+                line, currTime, event, resourceNum, pid);
+        
     }
-    printf("line = '%s'\n", line);
 
     return 0;
 }
