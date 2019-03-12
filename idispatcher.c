@@ -52,15 +52,26 @@
 
 // =================================== STRUCTS ====================================
 
+/**
+ * Simulated process control block
+ */
+typedef struct linked_list_node_struct {
+    int prevTime, runTime, readyTime, blockTime, pid;
+    struct linked_list_node_struct *next;
+} PCB;
+
 // ============================== FUNCTION PROTOTYPES =============================
 
 void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool *riEvent, int *resourceNum, int *pid);
+PCB* createPCB(int currTime, int pid);
+void freePCB(PCB *toFree);
 
 void flushInput(char* input);
 
 // ================================================================================
 
 // create a PCB linked list node struct (it will store all the necessary data)
+//      --> stores: prevTime, runTime, readyTime, blockTime, pid
 
 // create a pushBack queue function
 // create a popFront queue function
@@ -68,19 +79,21 @@ void flushInput(char* input);
 //      --> because need to print output in ascending order of pid at the end)
 
 // need a var to store running PCB
+//      --> need a var to track total running time of the default system-idle process
+//          -- (process 0 / pid = 0)
 // need a list pointer for the ready queue (head and tail pointers)
 // need a list pointer for each of the 5 resource queues (head and tail pointers)
 
 int main( int argc, char *argv[] ) {
     // declare variables
     char line[32];  // 32 char max
+    char event = '\0';
+    bool riEvent = false;
     int currTime = 0;
     int prevTime = 0;
-    char event = '\0';
     int resourceNum = -1;
     int pid = 0;
-    bool riEvent = false;
-
+    
     // continue getting input until a blank line is entered
     while(1) {
         fgets(line, 32, stdin);
@@ -157,10 +170,35 @@ void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool 
     }
 }
 
+/**
+ * Creates and initializes the process control block
+ * @param int currTime -the current time when it's created
+ * @param int pid -its process ID
+ * @return an allocated and initialized PCB
+ */
+PCB* createPCB(int currTime, int pid) {
+    // create PCB
+    PCB *new = NULL;
+    new = malloc(sizeof(PCB));
+    // init values
+    new->runTime = new->readyTime = new->blockTime = 0;
+    new->prevTime = currTime;
+    new->pid = pid;
+    new->next = NULL;
+}
+/**
+ * Frees a PCB, sets it to NULL after
+ * @param PCB *toFree -the PCB to be freed
+ */
+void freePCB(PCB *toFree) {
+    free(toFree);
+    toFree = NULL;
+}
+
 // ================================== MY HELPERS ==================================
 
 /**
- * Flushes all leftover data in the stream
+ * Flushes all leftover data in the stdin stream
  * @param char* input -the string that was just read from stdin
  */
 void flushInput(char* input) {
