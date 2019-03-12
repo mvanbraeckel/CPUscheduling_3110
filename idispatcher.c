@@ -185,6 +185,7 @@ PCB* createPCB(int currTime, int pid) {
     new->prevTime = currTime;
     new->pid = pid;
     new->next = NULL;
+    return new;
 }
 /**
  * Frees a PCB, sets it to NULL after
