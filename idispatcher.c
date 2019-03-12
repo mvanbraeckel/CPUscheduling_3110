@@ -78,7 +78,7 @@ int main( int argc, char *argv[] ) {
         // if input line is blank (empty string), stop
         if(line[0] == '\0') break;
 
-        // parse input (time, event (& maybe resource #), process ID)
+        // parse input (time, event (& maybe resource #), process ID (if it's not T))
         parseInputLine(line, &prevTime, &currTime, &event, &riEvent, &resourceNum, &pid);
         
         // print testing output
@@ -103,6 +103,17 @@ int main( int argc, char *argv[] ) {
 }
 
 // ================================================================================
+
+/**
+ * Helper that parses an input line (assuming there are no errors) storing in appropriate variables
+ * @param char* line -the input line being parsed
+ * @param int *prevTime -will hold the most recent time
+ * @param int *currTime -will hold the parsed time
+ * @param char *event -will hold the parsed event
+ * @param bool *riEvent -will be true if the event is 'R' or 'I', otherwise false
+ * @param int *resourceNum -will hold the resource number if event is 'R' or 'I', otherwise -1
+ * @param int *pid -will hold the process ID (-1 if event is 'T')
+ */
 void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool *riEvent, int *resourceNum, int *pid) {
     // declare var for parsing input lines
     char *token;
