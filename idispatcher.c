@@ -111,6 +111,8 @@ int main( int argc, char *argv[] ) {
             // print the resource number if necessary
             if(event == 'R' || event == 'I') {
                 printf(" %d", resourceNum);
+            } else {
+                printf("  ");
             }
             printf(" | pid = %d\n", pid);
         }
