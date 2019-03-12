@@ -101,8 +101,19 @@ int main( int argc, char *argv[] ) {
             pid = -1;
         }
         
-        printf("line = '%s' --> time=%d | event=%c %d | pid=%d | time diff=%d\n", 
-                line, currTime, event, resourceNum, pid, currTime-prevTime);
+        // print testing output
+        if(event == 'T') {
+            printf("line = '%s' --> time=%d | time diff=%d | event=%c\n", 
+                line, currTime, currTime-prevTime, event);
+        } else {
+            printf("line = '%s' --> time=%d | time diff=%d | event=%c", 
+                line, currTime, currTime-prevTime, event);
+            // print the resource number if necessary
+            if(event == 'R' || event == 'I') {
+                printf(" %d", resourceNum);
+            }
+            printf(" | pid=%d\n", pid);
+        }
         
     }
 
