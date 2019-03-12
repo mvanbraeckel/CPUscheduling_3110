@@ -51,6 +51,7 @@
 //#include <sys/uio.h> // read
 #include <stdio.h> // fopen, fread
 #include <stdlib.h>
+#include <stdbool.h>
 //#include <sys/time.h> // gettimeofday
 //#include <string.h>
 //#include <ctype.h>
@@ -58,20 +59,42 @@
 // =================================== STRUCTS ====================================
 
 // ============================== FUNCTION PROTOTYPES =============================
+void flushInput(char* input);
 
 // ================================================================================
 
 int main( int argc, char *argv[] ) {
     // declare variables
-    char buffer[32] = "\0"; // 32 char max
+    char line[32]; // 32 char max
 
-    //
-    while(fgets(buffer, 32, stdin) && buffer[0] != '\n') {
-        printf("buffer = '%s'\n", buffer);
+    // continue getting input until a blank line is entered
+    while(1) {
+        fgets(line, 32, stdin);
+        flushInput(line);
+        // if input line is blank (empty string), stop
+        if(line[0] == '\0') {
+            break;
+        }
+
+        printf("line = '%s'\n", line);
     }
-printf("buffer = '%s'\n", buffer);
+    printf("line = '%s'\n", line);
 
     return 0;
 }
 
 // ================================================================================
+
+/**
+ * Flushes all leftover data in the stream
+ * @param char* input -the string that was just read from stdin
+ */
+void flushInput(char* input) {
+    // if the '\n' is NOT found in the word itself, flush the stream (null-terminate the input regardless)
+    if(strchr(input, '\n') == NULL) {
+        while ((getchar()) != '\n');
+        input[strlen(input)] = '\0';
+    } else {
+        input[strlen(input)-1] = '\0';
+    }
+}
