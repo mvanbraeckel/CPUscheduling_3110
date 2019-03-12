@@ -8,25 +8,37 @@
  *  --> Empty line will signify the end of the input.
  *  --> Format of one line is as follows:
  *         <time> <event> {<process id>} ; where:
- *             - <time> - is an integer number denoting local time in milliseconds measured from 0 (time will be strictly increasing from line to line)
+ *             - <time> - is an integer number denoting local time in milliseconds measured
+ *                        from 0 (time will be strictly increasing from line to line)
  *             - <event> - is one of the following:
  *                 – C - create 
  *                 – E - exit 
  *                 – R N - request resource number N 
  *                 – I N - interrupt from resource number N (request accomplished)
  *                 – T - timer interrupt
- *             - <process id> - is a nonnegative integer, unique for each process (system idle process has <process id> = 0);
+ *             - <process id> - is a nonnegative integer, unique for each process
+ *                              (system idle process has <process id> = 0);
  * 
- *  (2) Your Dispatcher will have to keep track of events and changes in the state of the processes, taking into account the following additional conditions:
- *      1. There are 5 different kinds of resources in the system and requests can be serviced out of order of arrival
- *      2. Time sharing - the process which is in running state is to be preempted as the result of the timer interrupt if there are other ready processes in the system
+ *  (2) Your Dispatcher will have to keep track of events and changes in the state of the
+ *      processes, taking into account the following additional conditions:
+ *      1. There are 5 different kinds of resources in the system and requests can be
+ *          serviced out of order of arrival
+ *      2. Time sharing - the process which is in running state is to be preempted as the
+ *          result of the timer interrupt if there are other ready processes in the system
  *      3. Running process can also exit or get blocked because of request for a resource
- *      4. If there are no ready user processes, then process number 0 (system idle process) is running
- *      5. If process 0 is running and new process is created, or as the result of an event one of the blocked processes becomes ready (unblocked), this process will get CPU immediately
+ *      4. If there are no ready user processes, then process number 0
+ *          (system idle process) is running
+ *      5. If process 0 is running and new process is created, or as the result of an
+ *          event one of the blocked processes becomes ready (unblocked), this process
+ *          will get CPU immediately
  * 
- *  (3) When all lines of the input are processed, Dispatcher will print the following cumulative information about all processes admitted to the system during simulation:
+ *  (3) When all lines of the input are processed, Dispatcher will print the following
+ *      cumulative information about all processes admitted to the system during simulation:
+ * 
  *      <process id> <total time Running> <total time Ready> <total time Blocked>
- *  --> For the system idle process print only <total time Running> and assume that process 0 was created at time 0.
+ * 
+ *  --> For the system idle process, print only <total time Running> and assume that
+ *      process 0 was created at time 0.
  *  --> The output is one line per process in the increasing order of process IDs.
  * 
  * You can assume that the sequence of events given in the input is consistent and no input errors are present.
@@ -51,7 +63,12 @@
 
 int main( int argc, char *argv[] ) {
     // declare variables
+    char buffer[32] = "\0"; // 32 char max
 
+    //
+    while(fgets(buffer, 32, stdin) && buffer[0] != '\n') {
+        printf("buffer = '%s'\n");
+    }
 
 
     return 0;
