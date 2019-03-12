@@ -54,6 +54,8 @@
 
 // ============================== FUNCTION PROTOTYPES =============================
 
+void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool *riEvent, int *resourceNum, int *pid);
+
 void flushInput(char* input);
 
 // ================================================================================
@@ -61,7 +63,6 @@ void flushInput(char* input);
 int main( int argc, char *argv[] ) {
     // declare variables
     char line[32];  // 32 char max
-    char *token;    // for parsing input lines
     int currTime = 0;
     int prevTime = 0;
     char event = '\0';
@@ -75,31 +76,10 @@ int main( int argc, char *argv[] ) {
         flushInput(line);
         printf("first char = '%c'\n", line[0]);
         // if input line is blank (empty string), stop
-        if(line[0] == '\0') {
-            break;
-        }
+        if(line[0] == '\0') break;
 
         // parse input (time, event (& maybe resource #), process ID)
-        prevTime = currTime; // keep track of
-        token = strtok(line, " ");
-        currTime = atoi(token);
-        token = strtok(NULL, " ");
-        event = token[0];
-        // check if the event is 'R' or 'I', in which case it is followed by an extra argument
-        if(event == 'R' || event == 'I') {
-            riEvent = true;
-            token = strtok(NULL, " ");
-            resourceNum = atoi(token);
-        } else {
-            resourceNum = -1;
-        }
-        // check if the event is 'T', in which case there is no process ID
-        if(event != 'T') {
-            token = strtok(NULL, " ");
-            pid = atoi(token);
-        } else {
-            pid = -1;
-        }
+        parseInputLine(line, &prevTime, &currTime, &event, &riEvent, &resourceNum, &pid);
         
         // print testing output
         if(event == 'T') {
@@ -123,6 +103,39 @@ int main( int argc, char *argv[] ) {
 }
 
 // ================================================================================
+void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool *riEvent, int *resourceNum, int *pid) {
+    // declare var for parsing input lines
+    char *token;
+    
+    // parse time
+    prevTime = currTime; // keep track of this to calculate difference
+    token = strtok(line, " ");
+    currTime = atoi(token);
+
+    // parse event
+    token = strtok(NULL, " ");
+    event = token[0];
+
+    // parse resource number - only if the event is 'R' or 'I'
+    riEvent = false; //reset
+    if(event == 'R' || event == 'I') {
+        riEvent = true;
+        token = strtok(NULL, " ");
+        resourceNum = atoi(token);
+    } else {
+        resourceNum = -1;
+    }
+
+    // parse process ID - check if the event is 'T', in which case there isn't one
+    if(event != 'T') {
+        token = strtok(NULL, " ");
+        pid = atoi(token);
+    } else {
+        pid = -1;
+    }
+}
+
+// ================================== MY HELPERS ==================================
 
 /**
  * Flushes all leftover data in the stream
