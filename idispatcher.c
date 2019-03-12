@@ -67,7 +67,7 @@ int main( int argc, char *argv[] ) {
 
     //
     while(fgets(buffer, 32, stdin) && buffer[0] != '\n') {
-        printf("buffer = '%s'\n");
+        printf("buffer = '%s'\n", buffer);
     }
 
 
