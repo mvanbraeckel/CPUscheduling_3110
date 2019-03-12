@@ -83,7 +83,7 @@ int main( int argc, char *argv[] ) {
         currTime = atoi(token);
         token = strtok(NULL, " ");
         event = token[0];
-        // check if the event is R or I, in which case it is followed by an extra argument
+        // check if the event is 'R' or 'I', in which case it is followed by an extra argument
         if(event == 'R' || event == 'I') {
             riEvent = true;
             token = strtok(NULL, " ");
@@ -91,8 +91,13 @@ int main( int argc, char *argv[] ) {
         } else {
             resourceNum = -1;
         }
-        token = strtok(NULL, " ");
-        pid = atoi(token);
+        // check if the event is 'T', in which case there is no process ID
+        if(event != 'T') {
+            token = strtok(NULL, " ");
+            pid = atoi(token);
+        } else {
+            pid = -1;
+        }
         
         printf("line = '%s' --> time=%d | event=%d %d| pid=%d\n", 
                 line, currTime, event, resourceNum, pid);
