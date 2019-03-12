@@ -103,16 +103,16 @@ int main( int argc, char *argv[] ) {
         
         // print testing output
         if(event == 'T') {
-            printf("line = '%s' --> time=%d | time diff=%d | event=%c\n", 
+            printf("line = '%s'\t--> time = %5d | time diff = %5d | event=%c\n", 
                 line, currTime, currTime-prevTime, event);
         } else {
-            printf("line = '%s' --> time=%d | time diff=%d | event=%c", 
+            printf("line = '%s'\t--> time = %5d | time diff = %5d | event=%c", 
                 line, currTime, currTime-prevTime, event);
             // print the resource number if necessary
             if(event == 'R' || event == 'I') {
                 printf(" %d", resourceNum);
             }
-            printf(" | pid=%d\n", pid);
+            printf(" | pid = %d\n", pid);
         }
         
     }
