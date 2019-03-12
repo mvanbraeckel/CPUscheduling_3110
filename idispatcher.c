@@ -53,7 +53,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 //#include <sys/time.h> // gettimeofday
-//#include <string.h>
+#include <string.h>
 //#include <ctype.h>
 
 // =================================== STRUCTS ====================================
