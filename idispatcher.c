@@ -108,30 +108,30 @@ void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool 
     char *token;
     
     // parse time
-    prevTime = currTime; // keep track of this to calculate difference
+    *prevTime = *currTime; // keep track of this to calculate difference
     token = strtok(line, " ");
-    currTime = atoi(token);
+    *currTime = atoi(token);
 
     // parse event
     token = strtok(NULL, " ");
-    event = token[0];
+    *event = token[0];
 
     // parse resource number - only if the event is 'R' or 'I'
-    riEvent = false; //reset
-    if(event == 'R' || event == 'I') {
-        riEvent = true;
+    *riEvent = false; //reset
+    if(*event == 'R' || *event == 'I') {
+        *riEvent = true;
         token = strtok(NULL, " ");
-        resourceNum = atoi(token);
+        *resourceNum = atoi(token);
     } else {
-        resourceNum = -1;
+        *resourceNum = -1;
     }
 
     // parse process ID - check if the event is 'T', in which case there isn't one
-    if(event != 'T') {
+    if(*event != 'T') {
         token = strtok(NULL, " ");
-        pid = atoi(token);
+        *pid = atoi(token);
     } else {
-        pid = -1;
+        *pid = -1;
     }
 }
 
