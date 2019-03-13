@@ -194,18 +194,15 @@ void deleteQueue(PCB **queueTail) {
  * @param PCB *toAdd -the process being added
  */
 void pushBack(PCB **queueTail, PCB **queueHead, PCB *toAdd) {
-    // change to something easy to work with
-    PCB *qTail = *queueTail;
-    PCB *qHead = *queueHead;
     // if it's empty, set as first and last node in list
-    if(qTail == NULL) { 
-        qTail = toAdd;
-        qHead = toAdd;
+    if(*queueTail == NULL) { 
+        *queueTail = toAdd;
+        *queueHead = toAdd;
         return;
     }
     // set the node's next to the current end node, then set the added one as new end
-    toAdd->next = qTail;
-    qTail = toAdd;
+    toAdd->next = *queueTail;
+    *queueTail = toAdd;
 }
 // create a popFront queue function
 // create an insertSorted function
