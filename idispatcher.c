@@ -65,6 +65,7 @@ typedef struct linked_list_node_struct {
 
 PCB* createPCB(int currTime, int pid);
 void deletePCB(PCB *toDelete);
+void deleteQueue(PCB **queueTail, PCB **queueHead);
 void pushBack(PCB **queueTail, PCB **queueHead, PCB *toAdd);
 
 void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool *riEvent, int *resourceNum, int *pid);
@@ -125,8 +126,10 @@ int main( int argc, char *argv[] ) {
     while(1) {
         fgets(line, 32, stdin);
         flushInput(line);
-        // if input line is blank (empty string), stop
-        if(line[0] == '\0') break;
+        // if input line is blank (an empty string), stop
+        if(line[0] == '\0') {
+            break;
+        }
 
         // parse input (time, event (& maybe resource #), process ID (if it's not T))
         parseInputLine(line, &prevTime, &currTime, &event, &riEvent, &resourceNum, &pid);
@@ -171,20 +174,40 @@ PCB* createPCB(int currTime, int pid) {
     new->next = NULL;
     return new;
 }
+
 /**
  * Deletes (Frees) a process, sets it to NULL after freeing
  * @param PCB *toDelete -the PCB to be deleted
  */
 void deletePCB(PCB *toDelete) {
+    // make sure it exists first
+    if(toDelete == NULL) {
+        return;
+    }
     free(toDelete);
     toDelete = NULL;
 }
+
 /**
  * Deletes (Frees) a queue of processes
- * @param PCB **queueTail -the tail (start) of the queue to be deleted
+ * @param PCB **queueTail -the tail (first node) of the queue to be deleted
+ * @param PCB **queueHead -the head (last node) of the queue to be deleted
  */
-void deleteQueue(PCB **queueTail) {
-
+void deleteQueue(PCB **queueTail, PCB **queueHead) {
+    PCB *qTail = *queueTail;
+    PCB *qHead = *queueHead;
+    // make sure it exists first
+    if(qTail == NULL) {
+        return;
+    }
+    // free all nodes in list, then set tail and head to NULL
+    while(qTail != NULL) {
+        PCB *temp = qTail;
+        qTail = qTail->next;
+        deletePCB(temp);
+    }
+    qTail = NULL;
+    qHead = NULL;
 }
 
 /**
