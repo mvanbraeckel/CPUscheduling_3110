@@ -195,7 +195,6 @@ void deletePCB(PCB *toDelete) {
  */
 void deleteQueue(PCB **queueTail, PCB **queueHead) {
     PCB *qTail = *queueTail;
-    PCB *qHead = *queueHead;
     // make sure it exists first
     if(qTail == NULL) {
         return;
@@ -207,7 +206,7 @@ void deleteQueue(PCB **queueTail, PCB **queueHead) {
         deletePCB(temp);
     }
     qTail = NULL;
-    qHead = NULL;
+    *queueHead = NULL;
 }
 
 /**
