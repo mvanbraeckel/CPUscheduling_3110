@@ -53,7 +53,8 @@
 // =================================== STRUCTS ====================================
 
 /**
- * Simulated process control block
+ * Simulated process control block (it will store all the necessary data)
+ * --> stores: prevTime, runTime, readyTime, blockTime, pid
  */
 typedef struct linked_list_node_struct {
     int prevTime, runTime, readyTime, blockTime, pid;
@@ -71,19 +72,40 @@ void flushInput(char* input);
 
 // ================================================================================
 
-// create a PCB linked list node struct (it will store all the necessary data)
-//      --> stores: prevTime, runTime, readyTime, blockTime, pid
+//* create a PCB linked list node struct (it will store all the necessary data)
+//*      --> stores: prevTime, runTime, readyTime, blockTime, pid
 
 // create a pushBack queue function
 // create a popFront queue function
 // create an insertSorted function
 //      --> because need to print output in ascending order of pid at the end)
 
+// declare variables for process queues
+
 // need a var to store running PCB
 //      --> need a var to track total running time of the default system-idle process
 //          -- (process 0 / pid = 0)
-// need a list pointer for the ready queue (head and tail pointers)
-// need a list pointer for each of the 5 resource queues (head and tail pointers)
+PCB *runningProcess = NULL; // store the running process
+
+//* need a list pointer for the ready queue (head and tail pointers)
+
+// for the ready queue of processes
+PCB *readyQueueTail = NULL;
+PCB *readyQueueHead = NULL;
+
+//* need a list pointer for each of the 5 resource queues (head and tail pointers)
+
+// for the 5 resource queues of processes
+PCB *r1Tail = NULL;
+PCB *r1Head = NULL;
+PCB *r2Tail = NULL;
+PCB *r2Head = NULL;
+PCB *r3Tail = NULL;
+PCB *r3Head = NULL;
+PCB *r4Tail = NULL;
+PCB *r4Head = NULL;
+PCB *r5Tail = NULL;
+PCB *r5Head = NULL;
 
 int main( int argc, char *argv[] ) {
     // declare variables
@@ -99,7 +121,6 @@ int main( int argc, char *argv[] ) {
     while(1) {
         fgets(line, 32, stdin);
         flushInput(line);
-        printf("first char = '%c'\n", line[0]);
         // if input line is blank (empty string), stop
         if(line[0] == '\0') break;
 
