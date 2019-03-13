@@ -15,6 +15,7 @@ git: *.c Makefile
 	git add Makefile
 	git add test_inputs
 	git add test_outputs
+	git add *.pdf
 	git add *.c
 	git commit -m "automatic backup via makefile"
 	git remote rm origin
