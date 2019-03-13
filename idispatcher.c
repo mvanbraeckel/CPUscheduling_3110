@@ -198,7 +198,7 @@ void pushBack(PCB **queueTail, PCB **queueHead, PCB *toAdd) {
     PCB *qTail = *queueTail;
     PCB *qHead = *queueHead;
     // if it's empty, set as first and last node in list
-    if(qTail == NULL) {
+    if(qTail == NULL) { 
         qTail = toAdd;
         qHead = toAdd;
         return;
