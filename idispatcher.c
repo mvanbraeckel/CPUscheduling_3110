@@ -174,7 +174,6 @@ PCB* createPCB(int currTime, int pid) {
     new->next = NULL;
     return new;
 }
-
 /**
  * Deletes (Frees) a process, sets it to NULL after freeing
  * @param PCB *toDelete -the PCB to be deleted
@@ -187,7 +186,6 @@ void deletePCB(PCB *toDelete) {
     free(toDelete);
     toDelete = NULL;
 }
-
 /**
  * Deletes (Frees) a queue of processes
  * @param PCB **queueTail -the tail (first node) of the queue to be deleted
@@ -205,6 +203,7 @@ void deleteQueue(PCB **queueTail, PCB **queueHead) {
         qTail = qTail->next;
         deletePCB(temp);
     }
+    // reset tail and head pointers
     qTail = NULL;
     *queueHead = NULL;
 }
@@ -216,17 +215,33 @@ void deleteQueue(PCB **queueTail, PCB **queueHead) {
  * @param PCB *toAdd -the process being added
  */
 void pushBack(PCB **queueTail, PCB **queueHead, PCB *toAdd) {
+    PCB *qTail = *queueTail;
     // if it's empty, set as first and last node in list
-    if(*queueTail == NULL) { 
-        *queueTail = toAdd;
+    if(qTail == NULL) { 
+        qTail = toAdd;
         *queueHead = toAdd;
         return;
     }
     // set the node's next to the current end node, then set the added one as new end
-    toAdd->next = *queueTail;
-    *queueTail = toAdd;
+    toAdd->next = qTail;
+    qTail = toAdd;
 }
-// create a popFront queue function
+/**
+ * Pops and gets the front-most element of a queue
+ * @param PCB **queueTail -the back of the queue being accessed
+ * @param PCB **queueHead -the front of the queue being accessed
+ */
+PCB* popFront(PCB **queueTail, PCB **queueHead) {
+    PCB *qTail = *queueTail;
+    PCB *qHead = *queueHead;
+    // declare variables
+    PCB *toReturn = NULL;
+    // if it's empty, return NULL to indicate it this
+    if(qHead == NULL) {
+        return NULL;
+    }
+    return NULL;
+}
 // create an insertSorted function
 
 // =============================== HELPER FUNCTIONS ===============================
