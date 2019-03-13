@@ -65,6 +65,7 @@ typedef struct linked_list_node_struct {
 
 PCB* createPCB(int currTime, int pid);
 void deletePCB(PCB *toDelete);
+void pushBack(PCB **queueTail, PCB **queueHead, PCB *toAdd);
 
 void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool *riEvent, int *resourceNum, int *pid);
 
@@ -74,26 +75,22 @@ void flushInput(char* input);
 
 //* create a PCB linked list node struct (it will store all the necessary data)
 //*      --> stores: prevTime, runTime, readyTime, blockTime, pid
+//*^^ create helpers to push, pop, and insert_sorted (for final output)
 
-// create a pushBack queue function
-// create a popFront queue function
-// create an insertSorted function
-//      --> because need to print output in ascending order of pid at the end)
-
-// declare variables for process queues
-
-// need a var to store running PCB
-//      --> need a var to track total running time of the default system-idle process
-//          -- (process 0 / pid = 0)
-PCB *runningProcess = NULL; // store the running process
+//* need a var to store running PCB
+//* need a var to track total running time of the default system-idle process (process/pid=0)
 
 //* need a list pointer for the ready queue (head and tail pointers)
+//* need a list pointer for each of the 5 resource queues (head and tail pointers)
 
-// for the ready queue of processes
+// declare variables for process queues
+PCB *runningProcess = NULL; // store the running process
+int idleTime = 0;           // track time spent idle
+PCB* queues[6][2];          // first is ready, other 5 are resources; tail, then head
+
+/*// for the ready queue of processes
 PCB *readyQueueTail = NULL;
 PCB *readyQueueHead = NULL;
-
-//* need a list pointer for each of the 5 resource queues (head and tail pointers)
 
 // for the 5 resource queues of processes
 PCB *r1Tail = NULL;
@@ -105,7 +102,7 @@ PCB *r3Head = NULL;
 PCB *r4Tail = NULL;
 PCB *r4Head = NULL;
 PCB *r5Tail = NULL;
-PCB *r5Head = NULL;
+PCB *r5Head = NULL;*/
 
 int main( int argc, char *argv[] ) {
     // declare variables
@@ -116,6 +113,13 @@ int main( int argc, char *argv[] ) {
     int prevTime = 0;
     int resourceNum = -1;
     int pid = 0;
+
+    // init all queues tails and heads
+    for(int i = 0; i < 6; i++) {
+        for(int j = 0; j < 2; j++) {
+            queues[i][j] = NULL;
+        }
+    }
     
     // continue getting input until a blank line is entered
     while(1) {
@@ -168,13 +172,43 @@ PCB* createPCB(int currTime, int pid) {
     return new;
 }
 /**
- * Frees a PCB, sets it to NULL after
- * @param PCB *toDelete -the PCB to be freed
+ * Deletes (Frees) a process, sets it to NULL after freeing
+ * @param PCB *toDelete -the PCB to be deleted
  */
 void deletePCB(PCB *toDelete) {
     free(toDelete);
     toDelete = NULL;
 }
+/**
+ * Deletes (Frees) a queue of processes
+ * @param PCB **queueTail -the tail (start) of the queue to be deleted
+ */
+void deleteQueue(PCB **queueTail) {
+
+}
+
+/**
+ * Adds a process to the back of a queue
+ * @param PCB **queueTail -the back of the queue being added to
+ * @param PCB **queueHead -the front of the queue being added to
+ * @param PCB *toAdd -the process being added
+ */
+void pushBack(PCB **queueTail, PCB **queueHead, PCB *toAdd) {
+    // change to something easy to work with
+    PCB *qTail = *queueTail;
+    PCB *qHead = *queueHead;
+    // if it's empty, set as first and last node in list
+    if(qTail == NULL) {
+        qTail = toAdd;
+        qHead = toAdd;
+        return;
+    }
+    // set the node's next to the current end node, then set the added one as new end
+    toAdd->next = qTail;
+    qTail = toAdd;
+}
+// create a popFront queue function
+// create an insertSorted function
 
 // =============================== HELPER FUNCTIONS ===============================
 
