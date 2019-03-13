@@ -62,9 +62,10 @@ typedef struct linked_list_node_struct {
 
 // ============================== FUNCTION PROTOTYPES =============================
 
-void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool *riEvent, int *resourceNum, int *pid);
 PCB* createPCB(int currTime, int pid);
-void freePCB(PCB *toFree);
+void deletePCB(PCB *toDelete);
+
+void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool *riEvent, int *resourceNum, int *pid);
 
 void flushInput(char* input);
 
@@ -126,7 +127,35 @@ int main( int argc, char *argv[] ) {
     return 0;
 }
 
-// ================================================================================
+// ============================ LINKED LIST FUNCTIONS =============================
+
+/**
+ * Creates and initializes the process control block
+ * @param int currTime -the current time when it's created
+ * @param int pid -its process ID
+ * @return an allocated and initialized PCB
+ */
+PCB* createPCB(int currTime, int pid) {
+    // create PCB
+    PCB *new = NULL;
+    new = malloc(sizeof(PCB));
+    // init values
+    new->runTime = new->readyTime = new->blockTime = 0;
+    new->prevTime = currTime;
+    new->pid = pid;
+    new->next = NULL;
+    return new;
+}
+/**
+ * Frees a PCB, sets it to NULL after
+ * @param PCB *toDelete -the PCB to be freed
+ */
+void deletePCB(PCB *toDelete) {
+    free(toDelete);
+    toDelete = NULL;
+}
+
+// =============================== HELPER FUNCTIONS ===============================
 
 /**
  * Helper that parses an input line (assuming there are no errors) storing in appropriate variables
@@ -168,32 +197,6 @@ void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool 
     } else {
         *pid = -1;
     }
-}
-
-/**
- * Creates and initializes the process control block
- * @param int currTime -the current time when it's created
- * @param int pid -its process ID
- * @return an allocated and initialized PCB
- */
-PCB* createPCB(int currTime, int pid) {
-    // create PCB
-    PCB *new = NULL;
-    new = malloc(sizeof(PCB));
-    // init values
-    new->runTime = new->readyTime = new->blockTime = 0;
-    new->prevTime = currTime;
-    new->pid = pid;
-    new->next = NULL;
-    return new;
-}
-/**
- * Frees a PCB, sets it to NULL after
- * @param PCB *toFree -the PCB to be freed
- */
-void freePCB(PCB *toFree) {
-    free(toFree);
-    toFree = NULL;
 }
 
 // ================================== MY HELPERS ==================================
