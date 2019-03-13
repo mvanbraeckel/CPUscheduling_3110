@@ -238,9 +238,9 @@ PCB* popFront(PCB **queueTail, PCB **queueHead) {
     PCB *toReturn = NULL;
     // if it's empty, return NULL to indicate it this
     if(qHead == NULL) {
-        return NULL;
+        return toReturn;
     }
-    return NULL;
+    return toReturn;
 }
 // create an insertSorted function
 
