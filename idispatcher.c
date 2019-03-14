@@ -139,8 +139,11 @@ int main( int argc, char *argv[] ) {
 
         PCB *tester = createPCB(currTime, pid);
         printf("PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n", tester->pid, tester->prevTime, tester->runTime, tester->readyTime, tester->blockTime);
-        deletePCB(tester);
+        //deletePCB(tester);
+
+        pushBack(queues[0], tester);
     }
+    deleteQueue(queues[0]);
 
     return 0;
 }
