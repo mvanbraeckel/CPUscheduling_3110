@@ -56,10 +56,10 @@ typedef enum pstate { RUNNING, READY, BLOCKED } ProcessState;
 
 /**
  * Simulated process control block (it will store all the necessary data)
- * --> stores: prevTime, runTime, readyTime, blockTime, pid
+ * --> stores: pid, prevTime, runTime, readyTime, blockTime
  */
 typedef struct linked_list_node_struct {
-    int prevTime, runTime, readyTime, blockTime, pid;
+    int pid, prevTime, runTime, readyTime, blockTime;
     struct linked_list_node_struct *next;
 } PCB;
 
@@ -122,7 +122,7 @@ int main( int argc, char *argv[] ) {
         parseInputLine(line, &prevTime, &currTime, &event, &riEvent, &resourceNum, &pid);
         
         // print testing output
-        if(event == 'T') {
+        /*if(event == 'T') {
             printf("line = '%s'\t--> time = %5d | time diff = %5d | event = %c\n", 
                 line, currTime, currTime-prevTime, event);
         } else {
@@ -135,7 +135,10 @@ int main( int argc, char *argv[] ) {
                 printf("  ");
             }
             printf(" | pid = %d\n", pid);
-        }
+        }*/
+
+        PCB *tester = createPCB(currTime, pid);
+        printf("PCB id = %d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n", tester->pid, tester->prevTime, tester->runTime, tester->readyTime, tester->blockTime);
         
     }
 
