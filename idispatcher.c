@@ -246,9 +246,11 @@ void insertSorted(PCB **queue, PCB *toAdd) {
             if((*queue) == q) {
                 toAdd->next = q;
                 (*queue) = toAdd;
+                return;
             } else {
                 prev->next = toAdd;
                 toAdd->next = q;
+                return;
             }
         }
         prev = q;
