@@ -411,16 +411,13 @@ int main( int argc, char *argv[] ) {
     }*/
 
     // delete all PCBs from ready and resource queues, then delete the running process
-    // NOTE: all of these should be empty
+    // (NOTE: all of these should be empty though)
     for(int i = 0; i < 6; i++) {
         // display msg if it's not empty
         if(queues[i] != NULL) {
             fprintf(stderr, "Error: queue %d should be empty, but isn't\n", i);
         }
         deleteQueue(&queues[i]);
-        /*if(queues[i] == NULL) {
-            printf("q[%d] good job -- deleteQueue\n", i);
-        }*/
     }
     // display msg if it's not empty
     if(runningProcess != NULL) {
@@ -432,12 +429,11 @@ int main( int argc, char *argv[] ) {
     printf("0 %d\n", idleTime);
     printQueue(&queues[6]);
 
+    // delete all finished processes after printing, before exiting program
     deleteQueue(&queues[6]);
     if(queues[6] != NULL) {
         fprintf(stderr, "Error: done queue should be empty, but isn't\n");
-    }/* else  { //    if(queues[6] == NULL) {
-        printf("good job -- delete done queue\n");
-    }*/
+    }
 
     return 0;
 }
