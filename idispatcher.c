@@ -142,7 +142,7 @@ int main( int argc, char *argv[] ) {
         //        tester->pid, tester->prevTime, tester->runTime, tester->readyTime, tester->blockTime);
         //deletePCB(tester);
 
-        pushBack(queues[0], tester);
+        pushBack(&queues[0], tester);
         if(queues[0] == NULL) {
             printf("\tis NULL\n");
         }
@@ -153,7 +153,7 @@ int main( int argc, char *argv[] ) {
                 temp->pid, temp->prevTime, temp->runTime, temp->readyTime, temp->blockTime);
         temp = temp->next;
     }
-    deleteQueue(queues[0]);
+    deleteQueue(&queues[0]);
 
     return 0;
 }
