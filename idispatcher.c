@@ -232,13 +232,13 @@ int main( int argc, char *argv[] ) {
                     }
                     // if it reaches here, pid DNE, so display error message, ignore line
                     fprintf(stderr, "Error: process ID does not exist --ignoring input line\n");
-                    PCB *temp = createPCB(currTime, pid);
+                    /*PCB *temp = createPCB(currTime, pid);
                     if(temp->pid < 0) {
                         temp->pid -= counter;
                     } else {
                         temp->pid *= -1 * counter;
                     }
-                    insertSorted(&queues[6], temp);
+                    insertSorted(&queues[6], temp);*/
                 }
             }
 
@@ -308,13 +308,13 @@ int main( int argc, char *argv[] ) {
                     }
                     // if it reaches here, pid DNE, so display error message, ignore line
                     fprintf(stderr, "Error: process ID does not exist --ignoring input line\n");
-                    PCB *temp = createPCB(currTime, pid);
+                    /*PCB *temp = createPCB(currTime, pid);
                     if(temp->pid < 0) {
                         temp->pid -= counter;
                     } else {
                         temp->pid *= -1 * counter;
                     }
-                    insertSorted(&queues[6], temp);
+                    insertSorted(&queues[6], temp);*/
                 }
             }
 
