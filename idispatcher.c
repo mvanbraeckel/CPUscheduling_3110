@@ -391,13 +391,13 @@ int main( int argc, char *argv[] ) {
             // display error message, and ignore line
             fprintf(stderr, "Error: invalid event --ignoring input line\n");
 
-            PCB *temp = createPCB(currTime, pid);
+            /*PCB *temp = createPCB(currTime, pid);
             if(temp->pid < 0) {
                 temp->pid -= counter;
             } else {
                 temp->pid *= -1 * counter;
             }
-            insertSorted(&queues[6], temp);
+            insertSorted(&queues[6], temp);*/
         }
 
         //insertSorted(&queues[0], tester);
@@ -458,7 +458,7 @@ int main( int argc, char *argv[] ) {
     printf("rdyQ -- done popping\n");*/
 
     // print all PCBs
-    for(int i = 0; i < 7; i++) {
+    /*for(int i = 0; i < 7; i++) {
         PCB *curr = queues[i];
         while(curr != NULL) {
             printf("q[%d] -- PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
@@ -466,7 +466,7 @@ int main( int argc, char *argv[] ) {
             curr = curr->next;
         }
         printf("q[%d] -- done popping\n", i);
-    }
+    }*/
 
     // delete all PCBs from ready and resource queues, then delete the running process
     for(int i = 0; i < 6; i++) {
@@ -485,9 +485,8 @@ int main( int argc, char *argv[] ) {
     }
     deletePCB(&runningProcess);
 
-    // display output
+    // display program output (first idle time, then all processes' times)
     printf("0 %d\n", idleTime);
-    
     // print done queue, then delete it
     printQueue(&queues[6]);
 
