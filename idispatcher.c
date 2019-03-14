@@ -73,6 +73,7 @@ void pushBack(PCB **queue, PCB *toAdd);
 void insertSorted(PCB **queue, PCB *toAdd);
 PCB* popFront(PCB **queue);
 PCB* popID(PCB **queue, int pid);
+void printQueue(PCB **queue);
 
 void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool *riEvent, int *resourceNum, int *pid);
 
@@ -302,11 +303,11 @@ int main( int argc, char *argv[] ) {
 
     // print all PCBs
     for(int i = 0; i < 7; i++) {
-        PCB *temp = queues[i];
-        while(temp != NULL) {
+        PCB *curr = queues[i];
+        while(curr != NULL) {
             printf("q[%d] -- PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
-                    i, temp->pid, temp->prevTime, temp->runTime, temp->readyTime, temp->blockTime);
-            temp = temp->next;
+                    i, curr->pid, curr->prevTime, curr->runTime, curr->readyTime, curr->blockTime);
+            curr = curr->next;
         }
         printf("q[%d] -- done popping\n", i);
     }
@@ -318,7 +319,6 @@ int main( int argc, char *argv[] ) {
             fprintf(stderr, "Error: queue %d should be empty, but isn't\n", i);
         }
         deleteQueue(&queues[i]);
-
         if(queues[i] == NULL) {
             printf("q[%d] good job -- deleteQueue\n", i);
         }
@@ -332,14 +332,12 @@ int main( int argc, char *argv[] ) {
     // display output
     printf("0 %d\n", idleTime);
     
-    // print done queue ************************************************
-
-    // then delete it
+    // print done queue, then delete it
+    printQueue(&queues[6]);
     if(queues[6] != NULL) {
         fprintf(stderr, "Error: done queue should be empty, but isn't\n");
     }
     deleteQueue(&queues[6]);
-
     if(queues[6] == NULL) {
         printf("good job -- delete done queue\n");
     }
@@ -505,6 +503,23 @@ PCB* popID(PCB **queue, int pid) {
         q = q->next;
     }
     return NULL;    // pid wasn't found
+}
+
+/**
+ * Prints the info of each process in the queue
+ *  --> Format: <process id> <total time Running> <total time Ready> <total time Blocked>
+ * @param PCB **queue -the queue to be printed
+ */
+void printQueue(PCB **queue) {
+    // make sure it's not empty
+    if((*queue) == NULL) {
+        return;
+    }
+    // loop through and print each process' info
+    PCB *curr = (*queue);
+    while(curr != NULL) {
+        printf("%d %d %d %d\n", curr->pid, curr->runTime, curr->readyTime, curr->blockTime);
+    }
 }
 
 // =============================== HELPER FUNCTIONS ===============================
