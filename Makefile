@@ -25,7 +25,7 @@ git: *.c Makefile
 	git push -u origin master
 
 val0:
-	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all <./test_inputs/test0.in
+	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./idispatcher<./test_inputs/test0.in
 
 clean:
 	rm -f *.o idispatcher
