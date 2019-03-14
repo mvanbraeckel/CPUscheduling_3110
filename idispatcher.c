@@ -155,8 +155,7 @@ int main( int argc, char *argv[] ) {
                 del->pid, del->prevTime, del->runTime, del->readyTime, del->blockTime);
         deletePCB(del);
     }
-
-    printf("\tdone popping\n");
+    printf("rdyQ -- done popping\n");
 
     // print all PCBs
     for(int i = 0; i < 6; i++) {
@@ -166,6 +165,7 @@ int main( int argc, char *argv[] ) {
                     i, temp->pid, temp->prevTime, temp->runTime, temp->readyTime, temp->blockTime);
             temp = temp->next;
         }
+        printf("q[%d] -- done popping\n", i);
     }
 
     // delete all PCBs from all queues, then delete then running process
