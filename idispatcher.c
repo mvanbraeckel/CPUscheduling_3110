@@ -151,7 +151,7 @@ int main( int argc, char *argv[] ) {
                 idleTime += currTime - prevTime;
                 runningProcess = temp;
             }
-            // otherwise, add it to the end of the ready queue 
+            // otherwise, add it to the end of the ready queue
             else {
                 pushBack(&queues[0], temp);
             }
@@ -257,6 +257,8 @@ int main( int argc, char *argv[] ) {
     }
     deletePCB(&runningProcess);
 
+    
+    printf("0 %d\n", idleTime);
     return 0;
 }
 
