@@ -148,8 +148,17 @@ int main( int argc, char *argv[] ) {
         }
     }
 
-    // pop pid = 1 if it exists in ready queue, then print and delete it
+    // test that popID works if it's not found
     PCB *myPCB = NULL;
+    myPCB = popID(&queues[1], -2);
+    if(myPCB == NULL) {
+        printf("\tgood job --- popID not found case\n");
+    } else {
+        printf("\tbad job --- popID not found case\n");
+        deletePCB(&myPCB);
+    }
+
+    // pop pid = 1 if it exists in ready queue, then print and delete it
     myPCB = popID(&queues[0], 1);
     if(myPCB == NULL) {
         printf("oops, pid=1 not in ready queue\n");
@@ -165,11 +174,18 @@ int main( int argc, char *argv[] ) {
     // test that popFront & popID are fine if queue is empty
     myPCB = popFront(&queues[1]);
     if(myPCB == NULL) {
-        printf("\tgood job --- popFront\n");
+        printf("\tgood job --- popFront empty case\n");
+    } else {
+        printf("\tbad job --- popFront empty case\n");
+        deletePCB(&myPCB);
     }
+
     myPCB = popID(&queues[1], -2);
     if(myPCB == NULL) {
-        printf("\tgood job --- popID\n");
+        printf("\tgood job --- popID empty case\n");
+    } else {
+        printf("\tbad job --- popID empty case\n");
+        deletePCB(&myPCB);
     }
 
     // pop all PCBs from ready queue and print them before deleting
