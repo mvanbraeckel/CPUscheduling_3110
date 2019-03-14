@@ -156,9 +156,16 @@ int main( int argc, char *argv[] ) {
     }
 
     for(int i = 0; i < 6; i++) {
-
+        // display msg if it's not empty
+        if(queues[i] == NULL) {
+            fprintf(stderr, "Error: queue %d should be empty, but isn't\n", i);
+        }
+        deleteQueue(&queues[i]);
     }
-    deleteQueue(&queues[0]);
+    // display msg if it's not empty
+    if(runningProcess == NULL) {
+        fprintf(stderr, "Error: there shouldn't be a running process, but there is\n");
+    }
     deletePCB(runningProcess);
 
     return 0;
