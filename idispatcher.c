@@ -349,67 +349,6 @@ int main( int argc, char *argv[] ) {
         } // end if statement
     } // end while loop
 
-    // test that popID works if it's not found
-    //PCB *myPCB = NULL;
-    /*myPCB = popID(&queues[1], -2);
-    if(myPCB == NULL) {
-        printf("\tgood job --- popID not found case\n");
-    } else {
-        printf("\tbad job --- popID not found case\n");
-        deletePCB(&myPCB);
-    }
-
-    // pop pid = 1 if it exists in ready queue, then print it, then add it to r1 queue
-    myPCB = popID(&queues[0], 1);
-    if(myPCB == NULL) {
-        printf("oops, pid=1 not in ready queue\n");
-    } else {
-        printf("myPCB-- PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
-                myPCB->pid, myPCB->prevTime, myPCB->runTime, myPCB->readyTime, myPCB->blockTime);
-        pushBack(&queues[1], myPCB);
-        //deletePCB(&myPCB);
-        //if(myPCB == NULL) {
-        //    printf("\tgood job\n");
-        //}
-    }*/
-
-    // test that popFront & popID are fine if queue is empty
-    /*myPCB = popFront(&queues[5]);
-    if(myPCB == NULL) {
-        printf("\tgood job --- popFront empty case\n");
-    } else {
-        printf("\tbad job --- popFront empty case\n");
-        deletePCB(&myPCB);
-    }
-
-    myPCB = popID(&queues[5], -2);
-    if(myPCB == NULL) {
-        printf("\tgood job --- popID empty case\n");
-    } else {
-        printf("\tbad job --- popID empty case\n");
-        deletePCB(&myPCB);
-    }*/
-
-    // pop all PCBs from ready queue and print them before deleting
-    /*while(queues[0] != NULL) {
-        PCB *del = popFront(&queues[0]);
-        printf("rdyQ -- PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
-                del->pid, del->prevTime, del->runTime, del->readyTime, del->blockTime);
-        deletePCB(&del);
-    }
-    printf("rdyQ -- done popping\n");*/
-
-    // print all PCBs
-    /*for(int i = 0; i < 7; i++) {
-        PCB *curr = queues[i];
-        while(curr != NULL) {
-            printf("q[%d] -- PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
-                    i, curr->pid, curr->prevTime, curr->runTime, curr->readyTime, curr->blockTime);
-            curr = curr->next;
-        }
-        printf("q[%d] -- done popping\n", i);
-    }*/
-
     // delete all PCBs from ready and resource queues, then delete the running process
     // (NOTE: all of these should be empty though)
     for(int i = 0; i < 6; i++) {
