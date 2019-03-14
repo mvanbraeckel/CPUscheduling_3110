@@ -202,8 +202,9 @@ int main( int argc, char *argv[] ) {
                     runningProcess = toRun;
                 }
             }
-            // otherwise, search for it in the ready and resouce queues
+            // otherwise, search for it in the ready and resource queues
             else {
+                fprintf(stderr, "Notice: terminating process %d from a non-running state\n", pid);
                 // search ready queue
                 PCB *done = NULL;
                 done = popID(&queues[0], pid);
@@ -217,7 +218,7 @@ int main( int argc, char *argv[] ) {
                 }
                 // wasn't in ready queue, so search each resource queue
                 else {
-                    for(int i = 1; i < 7; i++) {
+                    for(int i = 1; i < 6; i++) {
                         done = popID(&queues[i], pid);
                         if(done != NULL) {
                             // update total blocked time first
@@ -229,8 +230,7 @@ int main( int argc, char *argv[] ) {
                             break;
                         }
                     }
-                    // if it reaches here, pid does not exist
-                    // so display error message, and ignore line
+                    // if it reaches here, pid DNE, so display error message, ignore line
                     fprintf(stderr, "Error: process ID does not exist --ignoring input line\n");
                     PCB *temp = createPCB(currTime, pid);
                     if(temp->pid < 0) {
@@ -254,6 +254,69 @@ int main( int argc, char *argv[] ) {
                 fprintf(stderr, "Error: process ID must be a non-negative integer - input line will be ignored\n");
                 continue;
             } // else, it was good input
+
+            // find the given process, update time, then remove and add to the specified resource queue
+            if(runningProcess->pid == pid) {
+                // update total run time first
+                runningProcess->runTime += currTime - runningProcess->prevTime;
+                runningProcess->prevTime = currTime;
+                // stop running, put in specified resource queue
+                PCB *toBlock = runningProcess;
+                runningProcess = NULL;      //set it to system idle process 0
+                toBlock->status = BLOCKED;
+                pushBack(&queues[resourceNum], toBlock);
+
+                // run the first element in the ready queue, if there is one
+                PCB *toRun = NULL;
+                toRun = popFront(&queues[0]);
+                if(toRun != NULL) {
+                    // update total ready time first
+                    toRun->readyTime += currTime - toRun->prevTime;
+                    toRun->prevTime = currTime;
+                    // have it run
+                    toRun->status = RUNNING;
+                    runningProcess = toRun;
+                }
+            }
+            // otherwise, search for it in the ready and resource queues
+            else {
+                fprintf(stderr, "Notice: blocking process %d from a non-running state\n", pid);
+                // search ready queue
+                PCB *toBlock = NULL;
+                toBlock = popID(&queues[0], pid);
+                if(toBlock != NULL) {
+                    // update total ready time first
+                    toBlock->readyTime += currTime - toBlock->prevTime;
+                    toBlock->prevTime = currTime;
+                    // put in specified resource queue
+                    toBlock->status = BLOCKED;
+                    pushBack(&queues[resourceNum], toBlock);
+                }
+                // wasn't in ready queue, so search each resource queue
+                else {
+                    for(int i = 1; i < 6; i++) {
+                        toBlock = popID(&queues[i], pid);
+                        if(toBlock != NULL) {
+                            // update total blocked time first
+                            toBlock->blockTime += currTime - toBlock->prevTime;
+                            toBlock->prevTime = currTime;
+                            // put in specified resource queue
+                            toBlock->status = BLOCKED;
+                            insertSorted(&queues[resourceNum], toBlock);
+                            break;
+                        }
+                    }
+                    // if it reaches here, pid DNE, so display error message, ignore line
+                    fprintf(stderr, "Error: process ID does not exist --ignoring input line\n");
+                    PCB *temp = createPCB(currTime, pid);
+                    if(temp->pid < 0) {
+                        temp->pid -= counter;
+                    } else {
+                        temp->pid *= -1 * counter;
+                    }
+                    insertSorted(&queues[6], temp);
+                }
+            }
 
         } else if(event == 'I') {   // ========================== I ==========================
             // make sure input is valid
