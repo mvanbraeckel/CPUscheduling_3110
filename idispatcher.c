@@ -469,6 +469,7 @@ int main( int argc, char *argv[] ) {
     }*/
 
     // delete all PCBs from ready and resource queues, then delete the running process
+    // NOTE: all of these should be empty
     for(int i = 0; i < 6; i++) {
         // display msg if it's not empty
         if(queues[i] != NULL) {
@@ -485,9 +486,8 @@ int main( int argc, char *argv[] ) {
     }
     deletePCB(&runningProcess);
 
-    // display program output (first idle time, then all processes' times)
+    // display program output (first idle time, then all completed processes' times)
     printf("0 %d\n", idleTime);
-    // print done queue, then delete it
     printQueue(&queues[6]);
 
     deleteQueue(&queues[6]);
