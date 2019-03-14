@@ -148,6 +148,17 @@ int main( int argc, char *argv[] ) {
         }
     }
 
+    // pop pid = 1 if it exists in ready queue, then print and delete it
+    PCB *myPCB = NULL;
+    myPCB = popID(&queues[0], 1);
+    if(myPCB == NULL) {
+        printf("oops, pid=1 not in ready queue\n");
+    } else {
+        printf("myPCB -- PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
+                myPCB->pid, myPCB->prevTime, myPCB->runTime, myPCB->readyTime, myPCB->blockTime);
+        deletePCB(myPCB);
+    }
+
     // pop all PCBs from ready queue and print them before deleting
     while(queues[0] != NULL) {
         PCB *del = popFront(&queues[0]);
