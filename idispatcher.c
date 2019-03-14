@@ -341,7 +341,7 @@ int main( int argc, char *argv[] ) {
     deleteQueue(&queues[6]);
 
     if(queues[6] == NULL) {
-        printf("q[%d] good job -- delete done queue\n");
+        printf("good job -- delete done queue\n");
     }
 
     return 0;
