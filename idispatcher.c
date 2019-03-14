@@ -81,7 +81,7 @@ void flushInput(char* input);
 
 //* create a PCB linked list node struct (it will store all the necessary data)
 //*      --> stores: prevTime, runTime, readyTime, blockTime, pid
-//***^ create helpers to push, pop (front and based on pid), and insert_sorted (for final output)
+//**** create helpers to push, pop (front and based on pid), and insert_sorted (for final output)
 
 //* need a var to store running PCB
 //* need a var to track total running time of the default system-idle process (process/pid=0)
@@ -158,21 +158,22 @@ int main( int argc, char *argv[] ) {
         deletePCB(&myPCB);
     }
 
-    // pop pid = 1 if it exists in ready queue, then print and delete it
+    // pop pid = 1 if it exists in ready queue, then print it, then add it to r1 queue
     myPCB = popID(&queues[0], 1);
     if(myPCB == NULL) {
         printf("oops, pid=1 not in ready queue\n");
     } else {
         printf("myPCB-- PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
                 myPCB->pid, myPCB->prevTime, myPCB->runTime, myPCB->readyTime, myPCB->blockTime);
-        deletePCB(&myPCB);
-        if(myPCB == NULL) {
-            printf("\tgood job\n");
-        }
+        pushBack(&queues[1], myPCB);
+        //deletePCB(&myPCB);
+        //if(myPCB == NULL) {
+        //    printf("\tgood job\n");
+        //}
     }
 
     // test that popFront & popID are fine if queue is empty
-    myPCB = popFront(&queues[1]);
+    myPCB = popFront(&queues[5]);
     if(myPCB == NULL) {
         printf("\tgood job --- popFront empty case\n");
     } else {
@@ -180,7 +181,7 @@ int main( int argc, char *argv[] ) {
         deletePCB(&myPCB);
     }
 
-    myPCB = popID(&queues[1], -2);
+    myPCB = popID(&queues[5], -2);
     if(myPCB == NULL) {
         printf("\tgood job --- popID empty case\n");
     } else {
@@ -215,6 +216,7 @@ int main( int argc, char *argv[] ) {
             fprintf(stderr, "Error: queue %d should be empty, but isn't\n", i);
         }
         deleteQueue(&queues[i]);
+
         if(queues[i] == NULL) {
             printf("q[%d] good job -- deleteQueue\n", i);
         }
