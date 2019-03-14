@@ -147,13 +147,19 @@ int main( int argc, char *argv[] ) {
             printf("\tis NULL\n");
         }
     }
+
     PCB *temp = queues[0];
     while(temp->next != NULL) {
         printf("PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
                 temp->pid, temp->prevTime, temp->runTime, temp->readyTime, temp->blockTime);
         temp = temp->next;
     }
+
+    for(int i = 0; i < 6; i++) {
+
+    }
     deleteQueue(&queues[0]);
+    deletePCB(runningProcess);
 
     return 0;
 }
