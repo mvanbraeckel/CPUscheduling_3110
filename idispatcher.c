@@ -140,7 +140,7 @@ int main( int argc, char *argv[] ) {
         PCB *tester = createPCB(currTime, pid);
         //printf("PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
         //        tester->pid, tester->prevTime, tester->runTime, tester->readyTime, tester->blockTime);
-        //deletePCB(tester);
+        //deletePCB(&tester);
 
         insertSorted(&queues[0], tester);
         if(queues[0] == NULL) {
@@ -156,7 +156,7 @@ int main( int argc, char *argv[] ) {
     } else {
         printf("myPCB-- PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
                 myPCB->pid, myPCB->prevTime, myPCB->runTime, myPCB->readyTime, myPCB->blockTime);
-        deletePCB(myPCB);
+        deletePCB(&myPCB);
         if(myPCB == NULL) printf("\tgood job\n");
     }
 
@@ -168,7 +168,7 @@ int main( int argc, char *argv[] ) {
         PCB *del = popFront(&queues[0]);
         printf("rdyQ -- PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
                 del->pid, del->prevTime, del->runTime, del->readyTime, del->blockTime);
-        deletePCB(del);
+        deletePCB(&del);
     }
     printf("rdyQ -- done popping\n");
 
@@ -195,7 +195,7 @@ int main( int argc, char *argv[] ) {
     if(runningProcess != NULL) {
         fprintf(stderr, "Error: there shouldn't be a running process, but there is\n");
     }
-    deletePCB(runningProcess);
+    deletePCB(&runningProcess);
 
     return 0;
 }
@@ -244,7 +244,7 @@ void deleteQueue(PCB **queue) {
     while((*queue) != NULL) {
         PCB *temp = (*queue);
         (*queue) = (*queue)->next;
-        deletePCB(temp);
+        deletePCB(&temp);
     }
     (*queue) = NULL;   // reset queue ptr (just in case)
 }
