@@ -648,7 +648,7 @@ PCB* popID(PCB **queue, int pid) {
     // otherwise, loop through and search for the process (queue pointer remains the same)
     PCB *q = (*queue);
     PCB *prev = q;
-    while(q->next != NULL) {
+    while(q != NULL) {
         if(q->pid == pid) {
             // it's a match, so pop it
             prev->next = q->next;
