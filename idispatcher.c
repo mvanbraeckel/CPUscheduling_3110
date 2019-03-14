@@ -52,7 +52,7 @@
 
 // =================================== STRUCTS ====================================
 
-typedef enum pstate { RUNNING, READY, BLOCKED } ProcessState;
+//typedef enum pstate { RUNNING, READY, BLOCKED } ProcessState;
 
 /**
  * Simulated process control block (it will store all the necessary data)
@@ -137,15 +137,45 @@ int main( int argc, char *argv[] ) {
             printf(" | pid = %d\n", pid);
         }*/
 
-        PCB *tester = createPCB(currTime, pid);
-        //printf("PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
-        //        tester->pid, tester->prevTime, tester->runTime, tester->readyTime, tester->blockTime);
-        //deletePCB(&tester);
+        /*PCB *tester = createPCB(currTime, pid);
+        printf("PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
+                tester->pid, tester->prevTime, tester->runTime, tester->readyTime, tester->blockTime);
+        deletePCB(&tester);*/
 
-        insertSorted(&queues[0], tester);
-        if(queues[0] == NULL) {
-            printf("\tis NULL\n");
+        // based on command, update times and then execute functionality
+        if(event == 'C') {
+            // create new process
+            PCB *temp = createPCB(currTime, pid);
+            // if a process is not running, update idle time and make it run
+            if(runningProcess == NULL) {
+                idleTime += currTime - prevTime;
+                runningProcess = temp;
+            }
+            // otherwise, add it to the end of the ready queue
+            else {
+                pushBack(&queues[0], temp);
+            }
+
+        } else if(event == 'E') {
+
+        } else if(event == 'R') {
+            
+        } else if(event == 'I') {
+            
+        } else if(event == 'T') {
+            
+        } else {
+            // display error message, and ignore line
+            fprintf(stderr, "Error: invalid event --ignoring input line\n");
+
+            PCB *temp = createPCB(currTime, pid);
+            insertSorted(&queues[5], temp);
         }
+
+        //insertSorted(&queues[0], tester);
+        /*if(queues[0] == NULL) {
+            printf("\tis NULL\n");
+        }*/
     }
 
     // test that popID works if it's not found
