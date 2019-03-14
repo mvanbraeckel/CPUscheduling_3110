@@ -180,7 +180,7 @@ int main( int argc, char *argv[] ) {
             } // else, it was good input
 
             // find the given process, update time, then remove and add to the done queue
-            if(runningProcess->pid == pid) {
+            if(runningProcess != NULL && runningProcess->pid == pid) {
                 // update total run time first
                 runningProcess->runTime += currTime - runningProcess->prevTime;
                 runningProcess->prevTime = currTime;
@@ -255,8 +255,8 @@ int main( int argc, char *argv[] ) {
                 continue;
             } // else, it was good input
 
-            /*// find the given process, update time, then remove and add to the specified resource queue
-            if(runningProcess->pid == pid) {
+            // find the given process, update time, then remove and add to the specified resource queue
+            if(runningProcess != NULL && runningProcess->pid == pid) {
                 // update total run time first
                 runningProcess->runTime += currTime - runningProcess->prevTime;
                 runningProcess->prevTime = currTime;
@@ -302,7 +302,7 @@ int main( int argc, char *argv[] ) {
                             toBlock->prevTime = currTime;
                             // put in specified resource queue
                             toBlock->status = BLOCKED;
-                            insertSorted(&queues[resourceNum], toBlock);
+                            pushBack(&queues[resourceNum], toBlock);
                             break;
                         }
                     }
@@ -316,7 +316,7 @@ int main( int argc, char *argv[] ) {
                     }
                     insertSorted(&queues[6], temp);
                 }
-            }*/
+            }
 
         } else if(event == 'I') {   // ========================== I ==========================
             // make sure input is valid
