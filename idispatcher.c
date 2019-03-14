@@ -47,7 +47,6 @@
 // =================================== INCLUDES ===================================
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 
 // =================================== STRUCTS ====================================
@@ -75,7 +74,7 @@ PCB* popFront(PCB **queue);
 PCB* popID(PCB **queue, int pid);
 void printQueue(PCB **queue);
 
-void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool *riEvent, int *resourceNum, int *pid);
+void parseInputLine(char* line, int *prevTime, int *currTime, char *event, int *resourceNum, int *pid);
 
 void flushInput(char* input);
 
@@ -105,7 +104,6 @@ int main( int argc, char *argv[] ) {
     // declare variables
     char line[102];  // 100 char max
     char event = '\0';
-    bool riEvent = false;
     int currTime = 0;
     int prevTime = 0;
     int resourceNum = -1;
@@ -123,7 +121,19 @@ int main( int argc, char *argv[] ) {
         }
 
         // parse input (time, event (& maybe resource #), process ID (if it's not T))
-        parseInputLine(line, &prevTime, &currTime, &event, &riEvent, &resourceNum, &pid);
+        parseInputLine(line, &prevTime, &currTime, &event, &resourceNum, &pid);
+
+        // make sure input is valid
+        if(currTime < prevTime || currTime >= 0) {
+            fprintf(stderr, "Error: local time stamp must be a strictly-increasing, non-negative integer - input line will be ignored\n");
+            continue;
+        } else if(resourceNum < 1 || resourceNum > 5) {
+            fprintf(stderr, "Error: resource number must be an integer [1,5] - input line will be ignored\n");
+            continue;
+        } else if(pid < 0) {
+            fprintf(stderr, "Error: process ID must be a non-negative integer - input line will be ignored\n");
+            continue;
+        } // else, it was good input
         
         // print testing output
         /*if(event == 'T') {
@@ -566,11 +576,10 @@ void printQueue(PCB **queue) {
  * @param int *prevTime -will hold the most recent time
  * @param int *currTime -will hold the parsed time
  * @param char *event -will hold the parsed event
- * @param bool *riEvent -will be true if the event is 'R' or 'I', otherwise false
  * @param int *resourceNum -will hold the resource number if event is 'R' or 'I', otherwise -1
  * @param int *pid -will hold the process ID (-1 if event is 'T')
  */
-void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool *riEvent, int *resourceNum, int *pid) {
+void parseInputLine(char* line, int *prevTime, int *currTime, char *event, int *resourceNum, int *pid) {
     // declare var for parsing input lines
     char *token;
     
@@ -584,9 +593,7 @@ void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool 
     *event = token[0];
 
     // parse resource number - only if the event is 'R' or 'I'
-    *riEvent = false; //reset
     if(*event == 'R' || *event == 'I') {
-        *riEvent = true;
         token = strtok(NULL, " ");
         *resourceNum = atoi(token);
     } else {
