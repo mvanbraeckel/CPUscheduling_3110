@@ -380,6 +380,7 @@ void deleteQueue(PCB **queue) {
     }
     // free all nodes in list, then set tail and head to NULL
     while((*queue) != NULL) {
+        printf("\tdeleting\n");
         PCB *temp = (*queue);
         (*queue) = (*queue)->next;
         deletePCB(&temp);
