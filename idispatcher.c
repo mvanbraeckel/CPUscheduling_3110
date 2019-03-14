@@ -490,11 +490,10 @@ int main( int argc, char *argv[] ) {
     // print done queue, then delete it
     printQueue(&queues[6]);
 
+    deleteQueue(&queues[6]);
     if(queues[6] != NULL) {
         fprintf(stderr, "Error: done queue should be empty, but isn't\n");
-    }
-    deleteQueue(&queues[6]);
-    if(queues[6] == NULL) {
+    } else  { //    if(queues[6] == NULL) {
         printf("good job -- delete done queue\n");
     }
 
