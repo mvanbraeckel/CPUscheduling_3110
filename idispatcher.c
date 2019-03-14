@@ -68,7 +68,7 @@ typedef struct linked_list_node_struct {
 
 PCB* createPCB(int currTime, int pid);
 void deletePCB(PCB **toDelete);
-void deleteQueue(PCB **queue);
+void deleteQueue(PCB *queue);
 void pushBack(PCB **queue, PCB *toAdd);
 void insertSorted(PCB **queue, PCB *toAdd);
 PCB* popFront(PCB **queue);
@@ -317,7 +317,7 @@ int main( int argc, char *argv[] ) {
         if(queues[i] != NULL) {
             fprintf(stderr, "Error: queue %d should be empty, but isn't\n", i);
         }
-        deleteQueue(&queues[i]);
+        deleteQueue(queues[i]);
 
         if(queues[i] == NULL) {
             printf("q[%d] good job -- deleteQueue\n", i);
@@ -371,21 +371,21 @@ void deletePCB(PCB **toDelete) {
 }
 /**
  * Deletes (Frees) a queue of processes
- * @param PCB **queue -the the queue to be deleted
+ * @param PCB *queue -the the queue to be deleted
  */
-void deleteQueue(PCB **queue) {
+void deleteQueue(PCB *queue) {
     // make sure it exists first
-    if((*queue) == NULL) {
+    if((queue) == NULL) {
         return;
     }
     // free all nodes in list, then set tail and head to NULL
-    while((*queue) != NULL) {
+    while((queue) != NULL) {
         printf("\tdeleting\n");
-        PCB *temp = (*queue);
-        (*queue) = (*queue)->next;
+        PCB *temp = (queue);
+        (queue) = (queue)->next;
         deletePCB(&temp);
     }
-    (*queue) = NULL;   // reset queue ptr (just in case)
+    (queue) = NULL;   // reset queue ptr (just in case)
 }
 
 /**
