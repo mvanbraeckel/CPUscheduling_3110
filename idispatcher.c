@@ -228,7 +228,8 @@ void deletePCB(PCB *toDelete) {
     if(toDelete == NULL) {
         return;
     }
-    free(toDelete);
+    PCB *temp = toDelete;
+    free(temp);
     toDelete = NULL;
 }
 /**
