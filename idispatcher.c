@@ -80,22 +80,12 @@ void flushInput(char* input);
 
 // ================================================================================
 
-//* create a PCB linked list node struct (it will store all the necessary data)
-//*      --> stores: prevTime, runTime, readyTime, blockTime, pid
-//**** create helpers to push, pop (front and based on pid), and insert_sorted (for final output)
-
-//* need a var to store running PCB
-//* need a var to track total running time of the default system-idle process (process/pid=0)
-
-//* need a list pointer for the ready queue (head and tail pointers)
-//* need a list pointer for each of the 5 resource queues (head and tail pointers)
-
-// declare variables for process queues
-PCB *runningProcess = NULL; // store the running process
-int idleTime = 0;           // track time spent idle
-PCB* queues[7];             // first is ready, other 5 are resources, then a "done" queue
-
 int main( int argc, char *argv[] ) {
+    // declare variables for process queues
+    PCB *runningProcess = NULL; // store the running process
+    int idleTime = 0;           // track time spent idle
+    PCB* queues[7];             // first is ready, other 5 are resources, then a "done" queue
+
     // init all queues to empty
     for(int i = 0; i < 7; i++) {
         queues[i] = NULL;
