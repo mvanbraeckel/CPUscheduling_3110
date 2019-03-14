@@ -215,6 +215,9 @@ int main( int argc, char *argv[] ) {
             fprintf(stderr, "Error: queue %d should be empty, but isn't\n", i);
         }
         deleteQueue(&queues[i]);
+        if(queues[i] == NULL) {
+            printf("q[%d] good job -- deleteQueue\n", i);
+        }
     }
     // display msg if it's not empty
     if(runningProcess != NULL) {
