@@ -227,7 +227,7 @@ void insertSorted(PCB *queue, PCB *toAdd) {
     while(q->next != NULL) {
         if(toAdd->pid <= q->pid) {
             // if it's first (or only) element, need to reset front of the queue
-            if(queue = q) {
+            if(queue == q) {
                 toAdd->next = q;
                 queue = toAdd;
             } else {
