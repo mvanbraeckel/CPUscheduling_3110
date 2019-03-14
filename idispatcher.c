@@ -67,11 +67,11 @@ typedef struct linked_list_node_struct {
 
 PCB* createPCB(int currTime, int pid);
 void deletePCB(PCB *toDelete);
-void deleteQueue(PCB *queue);
-void pushBack(PCB *queue, PCB *toAdd);
-void insertSorted(PCB *queue, PCB *toAdd);
-PCB* popFront(PCB *queue);
-PCB* popID(PCB *queue, int pid);
+void deleteQueue(PCB **queue);
+void pushBack(PCB **queue, PCB *toAdd);
+void insertSorted(PCB **queue, PCB *toAdd);
+PCB* popFront(PCB **queue);
+PCB* popID(PCB **queue, int pid);
 
 void parseInputLine(char* line, int *prevTime, int *currTime, char *event, bool *riEvent, int *resourceNum, int *pid);
 
@@ -191,35 +191,35 @@ void deletePCB(PCB *toDelete) {
 }
 /**
  * Deletes (Frees) a queue of processes
- * @param PCB *queue -the the queue to be deleted
+ * @param PCB **queue -the the queue to be deleted
  */
-void deleteQueue(PCB *queue) {
+void deleteQueue(PCB **queue) {
     // make sure it exists first
-    if(queue == NULL) {
+    if((*queue) == NULL) {
         return;
     }
     // free all nodes in list, then set tail and head to NULL
-    while(queue != NULL) {
-        PCB *temp = queue;
-        queue = queue->next;
+    while((*queue) != NULL) {
+        PCB *temp = (*queue);
+        (*queue) = (*queue)->next;
         deletePCB(temp);
     }
-    queue = NULL;   // reset queue ptr (just in case)
+    (*queue) = NULL;   // reset queue ptr (just in case)
 }
 
 /**
  * Adds a process to the back of a queue
- * @param PCB *queue -the queue being added to
+ * @param PCB **queue -the queue being added to
  * @param PCB *toAdd -the process being added
  */
-void pushBack(PCB *queue, PCB *toAdd) {
+void pushBack(PCB **queue, PCB *toAdd) {
     // if it's empty, set as first node in list
-    if(queue == NULL) { 
-        queue = toAdd;
+    if((*queue) == NULL) { 
+        (*queue) = toAdd;
         return;
     }
     // traverse to end of queue and add the node there (queue pointer remains the same)
-    PCB *q = queue;
+    PCB *q = (*queue);
     while(q->next != NULL) {
         q = q->next;
     }
@@ -228,24 +228,24 @@ void pushBack(PCB *queue, PCB *toAdd) {
 
 /**
  * Adds a process to a queue, sorted by process ID (ascending order)
- * @param PCB *queue -the queue being added to
+ * @param PCB **queue -the queue being added to
  * @param PCB *toAdd -the process being added
  */
-void insertSorted(PCB *queue, PCB *toAdd) {
+void insertSorted(PCB **queue, PCB *toAdd) {
     // if it's empty, set as first node in list
-    if(queue == NULL) { 
-        queue = toAdd;
+    if((*queue) == NULL) { 
+        (*queue) = toAdd;
         return;
     }
     // traverse to end of queue and add the node there (queue pointer remains the same)
-    PCB *q = queue;
+    PCB *q = (*queue);
     PCB *prev = q;
     while(q->next != NULL) {
         if(toAdd->pid <= q->pid) {
             // if it's first (or only) element, need to reset front of the queue
-            if(queue == q) {
+            if((*queue) == q) {
                 toAdd->next = q;
-                queue = toAdd;
+                (*queue) = toAdd;
             } else {
                 prev->next = toAdd;
                 toAdd->next = q;
@@ -260,41 +260,41 @@ void insertSorted(PCB *queue, PCB *toAdd) {
 
 /**
  * Pops and gets the front-most element of a queue
- * @param PCB *queue -the queue being accessed
+ * @param PCB **queue -the queue being accessed
  * @return the front-most element of the queue (not attached to the queue anymore),
  *          or NULL if not found
  */
-PCB* popFront(PCB *queue) {
+PCB* popFront(PCB **queue) {
     // if it's empty, return NULL to indicate so
-    if(queue == NULL) {
+    if((*queue) == NULL) {
         return NULL;
     }
     // pop first node and reset the front of the queue
-    PCB *toReturn = queue;
-    queue = queue->next;
+    PCB *toReturn = (*queue);
+    (*queue) = (*queue)->next;
     toReturn->next = NULL;
     return toReturn;
 }
 /**
  * Pops and gets the process designated by process ID from a queue
- * @param PCB *queue -the queue being accessed
+ * @param PCB **queue -the queue being accessed
  * @param int pid -the process ID to be removed from the queue
  * @return the process designated by the given ID (not attached to the queue anymore),
  *          or NULL if it's empty or not found
  */
-PCB* popID(PCB *queue, int pid) {
+PCB* popID(PCB **queue, int pid) {
     // if it's empty, return NULL to indicate so
-    if(queue == NULL) {
+    if((*queue) == NULL) {
         return NULL;
     }
     // loop through and search for the process
-    PCB *q = queue;
+    PCB *q = (*queue);
     PCB *prev = q;
     while(q->next != NULL) {
         if(q->pid == pid) {
             // if it's the first (or only) element, need to reset front of the queue
-            if(q == queue) {
-                return popFront(queue);
+            if(q == (*queue)) {
+                return popFront((*queue));
             } else {
                 prev->next = q->next;
                 q->next = NULL;
