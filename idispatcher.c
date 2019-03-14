@@ -294,7 +294,7 @@ PCB* popID(PCB **queue, int pid) {
         if(q->pid == pid) {
             // if it's the first (or only) element, need to reset front of the queue
             if(q == (*queue)) {
-                return popFront((*queue));
+                return popFront(queue);
             } else {
                 prev->next = q->next;
                 q->next = NULL;
