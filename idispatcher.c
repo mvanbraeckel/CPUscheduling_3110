@@ -157,7 +157,7 @@ int main( int argc, char *argv[] ) {
     printf("\tdone popping\n");
 
     PCB *temp = queues[0];
-    while(temp->next != NULL) {
+    while(temp != NULL) {
         printf("PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
                 temp->pid, temp->prevTime, temp->runTime, temp->readyTime, temp->blockTime);
         temp = temp->next;
