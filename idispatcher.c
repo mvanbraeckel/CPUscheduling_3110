@@ -142,7 +142,7 @@ int main( int argc, char *argv[] ) {
         //        tester->pid, tester->prevTime, tester->runTime, tester->readyTime, tester->blockTime);
         //deletePCB(tester);
 
-        pushBack(&queues[0], tester);
+        insertSorted(&queues[0], tester);
         if(queues[0] == NULL) {
             printf("\tis NULL\n");
         }
@@ -241,7 +241,7 @@ void insertSorted(PCB **queue, PCB *toAdd) {
     PCB *q = (*queue);
     PCB *prev = q;
     while(q->next != NULL) {
-        if(toAdd->pid <= q->pid) {
+        if(toAdd->pid < q->pid) {
             // if it's first (or only) element, need to reset front of the queue
             if((*queue) == q) {
                 toAdd->next = q;
