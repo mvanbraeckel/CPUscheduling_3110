@@ -171,7 +171,7 @@ int main( int argc, char *argv[] ) {
         deleteQueue(&queues[i]);
     }
     // display msg if it's not empty
-    if(runningProcess == NULL) {
+    if(runningProcess != NULL) {
         fprintf(stderr, "Error: there shouldn't be a running process, but there is\n");
     }
     deletePCB(runningProcess);
