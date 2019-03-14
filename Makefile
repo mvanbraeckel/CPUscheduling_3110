@@ -16,7 +16,9 @@ git: *.c Makefile
 	git add test_inputs
 	git add test_outputs
 	git add *.pdf
+	git add *.md
 	git add *.c
+	git add test_code.sh
 	git commit -m "automatic backup via makefile"
 	git remote rm origin
 	git config credential.helper store
