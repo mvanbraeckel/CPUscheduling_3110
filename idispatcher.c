@@ -231,7 +231,7 @@ int main( int argc, char *argv[] ) {
                         }
                     }
                     // if it reaches here, pid DNE, so display error message, ignore line
-                    fprintf(stderr, "Error: process ID does not exist --ignoring input line\n");
+                    fprintf(stderr, "Error: process ID %d does not exist --ignoring input line\n", pid);
                     /*PCB *temp = createPCB(currTime, pid);
                     if(temp->pid < 0) {
                         temp->pid -= counter;
@@ -307,7 +307,7 @@ int main( int argc, char *argv[] ) {
                         }
                     }
                     // if it reaches here, pid DNE, so display error message, ignore line
-                    fprintf(stderr, "Error: process ID does not exist --ignoring input line\n");
+                    fprintf(stderr, "Error: process ID %d does not exist --ignoring input line\n", pid);
                     /*PCB *temp = createPCB(currTime, pid);
                     if(temp->pid < 0) {
                         temp->pid -= counter;
@@ -331,6 +331,20 @@ int main( int argc, char *argv[] ) {
                 continue;
             } // else, it was good input
 
+            // remove specified process from specified resource queue, then add to ready queue
+            PCB *ready = NULL;
+            ready = popID(&queues[resourceNum], pid);
+            if(ready != NULL) {
+                // update total blocked time first
+                ready->blockTime += currTime - ready->prevTime;
+                ready->prevTime = currTime;
+                // put in ready queue
+                ready->status = READY;
+                pushBack(&queues[0], ready);
+            } else {
+                fprintf(stderr, "Error: process ID %d does not exist in resource %d's queue --ignoring input line\n", pid, resourceNum);
+            }
+
         } else if(event == 'T') {   // ========================== T ==========================
             // make sure input is valid
             if(currTime < prevTime || currTime < 0) {
@@ -352,7 +366,7 @@ int main( int argc, char *argv[] ) {
             ready->status = READY;
             pushBack(&queues[0], ready);
 
-            // run the first element in the ready queue
+            // run the first element in the ready queue (already checked it wasn't empty earlier)
             PCB *toRun = NULL;
             toRun = popFront(&queues[0]);
             if(toRun != NULL) {
