@@ -123,18 +123,6 @@ int main( int argc, char *argv[] ) {
         // parse input (time, event (& maybe resource #), process ID (if it's not T))
         parseInputLine(line, &prevTime, &currTime, &event, &resourceNum, &pid);
 
-        // make sure input is valid
-        if(currTime < prevTime || currTime < 0) {
-            fprintf(stderr, "Error: local time stamp must be a strictly-increasing, non-negative integer - input line will be ignored\n");
-            continue;
-        } else if(resourceNum < 1 || resourceNum > 5) {
-            fprintf(stderr, "Error: resource number must be an integer [1,5] - input line will be ignored\n");
-            continue;
-        } else if(pid < 0) {
-            fprintf(stderr, "Error: process ID must be a non-negative integer - input line will be ignored\n");
-            continue;
-        } // else, it was good input
-        
         // print testing output
         /*if(event == 'T') {
             printf("line = '%s'\t--> time = %5d | time diff = %5d | event = %c\n", 
