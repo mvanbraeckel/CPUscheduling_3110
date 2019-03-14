@@ -52,7 +52,7 @@
 
 // =================================== STRUCTS ====================================
 
-//typedef enum pstate { RUNNING, READY, BLOCKED } ProcessState;
+typedef enum pstate { NEW, RUNNING, READY, BLOCKED, TERMINATED } ProcessState;
 
 /**
  * Simulated process control block (it will store all the necessary data)
@@ -60,6 +60,7 @@
  */
 typedef struct linked_list_node_struct {
     int pid, prevTime, runTime, readyTime, blockTime;
+    ProcessState status;
     struct linked_list_node_struct *next;
 } PCB;
 
@@ -92,11 +93,11 @@ void flushInput(char* input);
 // declare variables for process queues
 PCB *runningProcess = NULL; // store the running process
 int idleTime = 0;           // track time spent idle
-PCB* queues[6];             // first is ready, other 5 are resources
+PCB* queues[7];             // first is ready, other 5 are resources, then a "done" queue
 
 int main( int argc, char *argv[] ) {
     // init all queues to empty
-    for(int i = 0; i < 6; i++) {
+    for(int i = 0; i < 7; i++) {
         queues[i] = NULL;
     }
 
@@ -109,8 +110,10 @@ int main( int argc, char *argv[] ) {
     int resourceNum = -1;
     int pid = 0;
     
+    int counter = 0;
     // continue getting input until a blank line is entered
     while(1) {
+        counter++;
         fgets(line, 32, stdin);
         flushInput(line);
         // if input line is blank (an empty string), stop
@@ -142,21 +145,76 @@ int main( int argc, char *argv[] ) {
                 tester->pid, tester->prevTime, tester->runTime, tester->readyTime, tester->blockTime);
         deletePCB(&tester);*/
 
-        // based on command, update times and then execute functionality
+        // based on command, update time and then execute functionality
         if(event == 'C') {
             // create new process
-            PCB *temp = createPCB(currTime, pid);
+            PCB *newPCB = createPCB(currTime, pid);
             // if a process is not running, update idle time and make it run
             if(runningProcess == NULL) {
                 idleTime += currTime - prevTime;
-                runningProcess = temp;
+                newPCB->status = RUNNING;
+                runningProcess = newPCB;
             }
             // otherwise, add it to the end of the ready queue
             else {
-                pushBack(&queues[0], temp);
+                newPCB->status = READY;
+                pushBack(&queues[0], newPCB);
             }
 
         } else if(event == 'E') {
+            // find the given process, update time, then remove and add to the done queue
+            if(runningProcess->pid == pid) {
+                // update total run time first
+                runningProcess->runTime += runningProcess->prevTime - currTime;
+                runningProcess->prevTime = currTime;
+                // stop running, put in done queue
+                PCB *done = runningProcess;
+                runningProcess = NULL;
+                done->status = TERMINATED;
+                insertSorted(&queues[6], done);
+
+                // run the first element in the ready queue, if there is one **********************************************
+                PCB *toRun = NULL;
+            }
+            // otherwise, search for it in the ready and resouce queues
+            else {
+                // search ready queue
+                PCB *done = NULL;
+                done = popID(&queues[0], pid);
+                if(done != NULL) {
+                    // update total ready time first
+                    done->readyTime += done->prevTime - currTime;
+                    done->prevTime = currTime;
+                    // put in done queue
+                    done->status = TERMINATED;
+                    insertSorted(&queues[6], done);
+                }
+                // wasn't in ready queue, so search each resource queue
+                else {
+                    for(int i = 1; i < 7; i++) {
+                        done = popID(&queues[i], pid);
+                        if(done != NULL) {
+                            // update total blocked time first
+                            done->blockTime += done->prevTime - currTime;
+                            done->prevTime = currTime;
+                            // put in done queue
+                            done->status = TERMINATED;
+                            insertSorted(&queues[6], done);
+                            break;
+                        }
+                    }
+                    // if it reaches here, pid does not exist
+                    // so display error message, and ignore line
+                    fprintf(stderr, "Error: process ID does not exist --ignoring input line\n");
+                    PCB *temp = createPCB(currTime, pid);
+                    if(temp->pid < 0) {
+                        temp->pid -= counter;
+                    } else {
+                        temp->pid *= -1 * counter;
+                    }
+                    insertSorted(&queues[6], temp);
+                }
+            }
 
         } else if(event == 'R') {
             
@@ -169,7 +227,12 @@ int main( int argc, char *argv[] ) {
             fprintf(stderr, "Error: invalid event --ignoring input line\n");
 
             PCB *temp = createPCB(currTime, pid);
-            insertSorted(&queues[5], temp);
+            if(temp->pid < 0) {
+                temp->pid -= counter;
+            } else {
+                temp->pid *= -1 * counter;
+            }
+            insertSorted(&queues[6], temp);
         }
 
         //insertSorted(&queues[0], tester);
@@ -179,8 +242,8 @@ int main( int argc, char *argv[] ) {
     }
 
     // test that popID works if it's not found
-    PCB *myPCB = NULL;
-    myPCB = popID(&queues[1], -2);
+    //PCB *myPCB = NULL;
+    /*myPCB = popID(&queues[1], -2);
     if(myPCB == NULL) {
         printf("\tgood job --- popID not found case\n");
     } else {
@@ -200,10 +263,10 @@ int main( int argc, char *argv[] ) {
         //if(myPCB == NULL) {
         //    printf("\tgood job\n");
         //}
-    }
+    }*/
 
     // test that popFront & popID are fine if queue is empty
-    myPCB = popFront(&queues[5]);
+    /*myPCB = popFront(&queues[5]);
     if(myPCB == NULL) {
         printf("\tgood job --- popFront empty case\n");
     } else {
@@ -217,19 +280,19 @@ int main( int argc, char *argv[] ) {
     } else {
         printf("\tbad job --- popID empty case\n");
         deletePCB(&myPCB);
-    }
+    }*/
 
     // pop all PCBs from ready queue and print them before deleting
-    while(queues[0] != NULL) {
+    /*while(queues[0] != NULL) {
         PCB *del = popFront(&queues[0]);
         printf("rdyQ -- PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
                 del->pid, del->prevTime, del->runTime, del->readyTime, del->blockTime);
         deletePCB(&del);
     }
-    printf("rdyQ -- done popping\n");
+    printf("rdyQ -- done popping\n");*/
 
     // print all PCBs
-    for(int i = 0; i < 6; i++) {
+    for(int i = 0; i < 7; i++) {
         PCB *temp = queues[i];
         while(temp != NULL) {
             printf("q[%d] -- PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
@@ -239,7 +302,7 @@ int main( int argc, char *argv[] ) {
         printf("q[%d] -- done popping\n", i);
     }
 
-    // delete all PCBs from all queues, then delete then running process
+    // delete all PCBs from ready and resource queues, then delete the running process
     for(int i = 0; i < 6; i++) {
         // display msg if it's not empty
         if(queues[i] != NULL) {
@@ -257,8 +320,11 @@ int main( int argc, char *argv[] ) {
     }
     deletePCB(&runningProcess);
 
-    
+    // display output
     printf("0 %d\n", idleTime);
+    
+    // print done queue ************************************************
+
     return 0;
 }
 
@@ -278,6 +344,7 @@ PCB* createPCB(int currTime, int pid) {
     new->runTime = new->readyTime = new->blockTime = 0;
     new->prevTime = currTime;
     new->pid = pid;
+    new->status = NEW;
     new->next = NULL;
     return new;
 }
