@@ -210,9 +210,6 @@ int main( int argc, char *argv[] ) {
                 done = popID(&queues[0], pid);
 
                 if(done != NULL) {
-                    
-                    printf("\t from ready queue\n");
-
                     // update total ready time first
                     done->readyTime += currTime - done->prevTime;
                     done->prevTime = currTime;
@@ -225,9 +222,6 @@ int main( int argc, char *argv[] ) {
                     for(int i = 1; i < 6; i++) {
                         done = popID(&queues[i], pid);
                         if(done != NULL) {
-
-                            printf("\t from resource queue %d\n", i);
-
                             // update total blocked time first
                             done->blockTime += currTime - done->prevTime;
                             done->prevTime = currTime;
@@ -339,15 +333,23 @@ int main( int argc, char *argv[] ) {
             } // else, it was good input
 
             // remove specified process from specified resource queue, then add to ready queue
-            PCB *ready = NULL;
-            ready = popID(&queues[resourceNum], pid);
-            if(ready != NULL) {
+            PCB *fromRQ = NULL;
+            fromRQ = popID(&queues[resourceNum], pid);
+            if(fromRQ != NULL) {
                 // update total blocked time first
-                ready->blockTime += currTime - ready->prevTime;
-                ready->prevTime = currTime;
-                // put in ready queue
-                ready->status = READY;
-                pushBack(&queues[0], ready);
+                fromRQ->blockTime += currTime - fromRQ->prevTime;
+                fromRQ->prevTime = currTime;
+                // if a process is not running, update idle time and make it run
+                if(runningProcess == NULL) {
+                    idleTime += currTime - prevTime;
+                    fromRQ->status = RUNNING;
+                    runningProcess = fromRQ;
+                }
+                // otherwise, add it to the end of the ready queue
+                else {
+                    fromRQ->status = READY;
+                    pushBack(&queues[0], fromRQ);
+                }
             } else {
                 fprintf(stderr, "Error: process ID %d does not exist in resource %d's queue --ignoring input line\n", pid, resourceNum);
             }
