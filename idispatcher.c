@@ -237,21 +237,22 @@ void insertSorted(PCB **queue, PCB *toAdd) {
         (*queue) = toAdd;
         return;
     }
-    // traverse to end of queue and add the node there (queue pointer remains the same)
+
+    // check if it's the first (or only) element
+    if(toAdd->pid < (*queue)->pid) {
+        toAdd->next = (*queue);
+        (*queue) = toAdd;
+        return;
+    } 
+    // otherwise, traverse to end of queue and add the node there (queue pointer remains the same)
     PCB *q = (*queue);
     PCB *prev = q;
     while(q->next != NULL) {
         if(toAdd->pid < q->pid) {
-            // if it's first (or only) element, need to reset front of the queue
-            if((*queue) == q) {
-                toAdd->next = q;
-                (*queue) = toAdd;
-                return;
-            } else {
-                prev->next = toAdd;
-                toAdd->next = q;
-                return;
-            }
+            // add it since it's less than the next node
+            prev->next = toAdd;
+            toAdd->next = q;
+            return;
         }
         prev = q;
         q = q->next;
@@ -289,19 +290,20 @@ PCB* popID(PCB **queue, int pid) {
     if((*queue) == NULL) {
         return NULL;
     }
-    // loop through and search for the process
+
+    // check if it's the first (or only) element
+    if((*queue)->pid == pid) {
+        return popFront(queue);
+    }
+    // otherwise, loop through and search for the process (queue pointer remains the same)
     PCB *q = (*queue);
     PCB *prev = q;
     while(q->next != NULL) {
         if(q->pid == pid) {
-            // if it's the first (or only) element, need to reset front of the queue
-            if(q == (*queue)) {
-                return popFront(queue);
-            } else {
-                prev->next = q->next;
-                q->next = NULL;
-                return q;
-            }
+            // it's a match, so pop it
+            prev->next = q->next;
+            q->next = NULL;
+            return q;
         }
         prev = q;
         q = q->next;
