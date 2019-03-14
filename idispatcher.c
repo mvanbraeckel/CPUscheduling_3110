@@ -102,7 +102,7 @@ int main( int argc, char *argv[] ) {
     }
 
     // declare variables
-    char line[32];  // 32 char max
+    char line[102];  // 100 char max
     char event = '\0';
     bool riEvent = false;
     int currTime = 0;
@@ -114,7 +114,7 @@ int main( int argc, char *argv[] ) {
     // continue getting input until a blank line is entered
     while(1) {
         counter++;
-        fgets(line, 32, stdin);
+        fgets(line, 102, stdin);
         flushInput(line);
         // if input line is blank (an empty string), stop
         if(line[0] == '\0') {
@@ -169,12 +169,21 @@ int main( int argc, char *argv[] ) {
                 runningProcess->prevTime = currTime;
                 // stop running, put in done queue
                 PCB *done = runningProcess;
-                runningProcess = NULL;
+                runningProcess = NULL;      //set it to system idle process 0
                 done->status = TERMINATED;
                 insertSorted(&queues[6], done);
 
-                // run the first element in the ready queue, if there is one **********************************************
+                // run the first element in the ready queue, if there is one
                 PCB *toRun = NULL;
+                toRun = popFront(&queues[0]);
+                if(toRun != NULL) {
+                    // update total ready time first
+                    toRun->readyTime += toRun->prevTime - currTime;
+                    toRun->prevTime = currTime;
+                    // have it run
+                    toRun->status = RUNNING;
+                    runningProcess = toRun;
+                }
             }
             // otherwise, search for it in the ready and resouce queues
             else {
