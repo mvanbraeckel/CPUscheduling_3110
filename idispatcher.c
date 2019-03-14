@@ -208,7 +208,11 @@ int main( int argc, char *argv[] ) {
                 // search ready queue
                 PCB *done = NULL;
                 done = popID(&queues[0], pid);
+
                 if(done != NULL) {
+                    
+                    printf("\t from ready queue\n");
+
                     // update total ready time first
                     done->readyTime += currTime - done->prevTime;
                     done->prevTime = currTime;
@@ -221,6 +225,9 @@ int main( int argc, char *argv[] ) {
                     for(int i = 1; i < 6; i++) {
                         done = popID(&queues[i], pid);
                         if(done != NULL) {
+
+                            printf("\t from resource queue %d\n", i);
+
                             // update total blocked time first
                             done->blockTime += currTime - done->prevTime;
                             done->prevTime = currTime;
