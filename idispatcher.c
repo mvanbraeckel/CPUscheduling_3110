@@ -148,21 +148,27 @@ int main( int argc, char *argv[] ) {
         }
     }
 
+    // pop all PCBs from ready queue and print them before deleting
     while(queues[0] != NULL) {
         PCB *del = popFront(&queues[0]);
-        printf("PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
+        printf("rdyQ -- PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
                 del->pid, del->prevTime, del->runTime, del->readyTime, del->blockTime);
+        deletePCB(del);
     }
 
     printf("\tdone popping\n");
 
-    PCB *temp = queues[0];
-    while(temp != NULL) {
-        printf("PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
-                temp->pid, temp->prevTime, temp->runTime, temp->readyTime, temp->blockTime);
-        temp = temp->next;
+    // print all PCBs
+    for(int i = 0; i < 6; i++) {
+        PCB *temp = queues[i];
+        while(temp != NULL) {
+            printf("q[%d] -- PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
+                    i, temp->pid, temp->prevTime, temp->runTime, temp->readyTime, temp->blockTime);
+            temp = temp->next;
+        }
     }
 
+    // delete all PCBs from all queues, then delete then running process
     for(int i = 0; i < 6; i++) {
         // display msg if it's not empty
         if(queues[i] != NULL) {
