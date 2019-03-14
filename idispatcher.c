@@ -147,7 +147,7 @@ int main( int argc, char *argv[] ) {
         deletePCB(&tester);*/
 
         // based on command, update time and then execute functionality
-        if(event == 'C') {
+        if(event == 'C') {          // ========================== C ==========================
             // create new process
             PCB *newPCB = createPCB(currTime, pid);
             // if a process is not running, update idle time and make it run
@@ -162,7 +162,7 @@ int main( int argc, char *argv[] ) {
                 pushBack(&queues[0], newPCB);
             }
 
-        } else if(event == 'E') {
+        } else if(event == 'E') {   // ========================== E ==========================
             // find the given process, update time, then remove and add to the done queue
             if(runningProcess->pid == pid) {
                 // update total run time first
@@ -226,13 +226,38 @@ int main( int argc, char *argv[] ) {
                 }
             }
 
-        } else if(event == 'R') {
+        } else if(event == 'R') {   // ========================== R ==========================
             
-        } else if(event == 'I') {
+        } else if(event == 'I') {   // ========================== I ==========================
             
-        } else if(event == 'T') {
+        } else if(event == 'T') {   // ========================== T ==========================
+            // check if a process is running first
+            if(runningProcess == NULL || queues[0] == NULL) {
+                continue;
+            }
+
+            // update total run time first
+            runningProcess->runTime += currTime - runningProcess->prevTime;
+            runningProcess->prevTime = currTime;
+            // put the running process in the ready queue
+            PCB *ready = runningProcess;
+            runningProcess = NULL;      //set it to system idle process 0
+            ready->status = READY;
+            pushBack(&queues[0], ready);
+
+            // run the first element in the ready queue
+            PCB *toRun = NULL;
+            toRun = popFront(&queues[0]);
+            if(toRun != NULL) {
+                // update total ready time first
+                toRun->readyTime += currTime - toRun->prevTime;
+                toRun->prevTime = currTime;
+                // have it run
+                toRun->status = RUNNING;
+                runningProcess = toRun;
+            }
             
-        } else {
+        } else {                    // ========================= ELSE ========================
             // display error message, and ignore line
             fprintf(stderr, "Error: invalid event --ignoring input line\n");
 
@@ -249,7 +274,8 @@ int main( int argc, char *argv[] ) {
         /*if(queues[0] == NULL) {
             printf("\tis NULL\n");
         }*/
-    }
+
+    } // end while loop
 
     // test that popID works if it's not found
     //PCB *myPCB = NULL;
@@ -402,6 +428,10 @@ void deleteQueue(PCB **queue) {
  * @param PCB *toAdd -the process being added
  */
 void pushBack(PCB **queue, PCB *toAdd) {
+    // make sure process given is valid
+    if(toAdd == NULL) {
+        return;
+    }
     // if it's empty, set as first node in list
     if((*queue) == NULL) { 
         (*queue) = toAdd;
@@ -421,6 +451,10 @@ void pushBack(PCB **queue, PCB *toAdd) {
  * @param PCB *toAdd -the process being added
  */
 void insertSorted(PCB **queue, PCB *toAdd) {
+    // make sure process given is valid
+    if(toAdd == NULL) {
+        return;
+    }
     // if it's empty, set as first node in list
     if((*queue) == NULL) { 
         (*queue) = toAdd;
