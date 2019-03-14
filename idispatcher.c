@@ -247,15 +247,19 @@ void insertSorted(PCB **queue, PCB *toAdd) {
     // otherwise, traverse to end of queue and add the node there (queue pointer remains the same)
     PCB *q = (*queue);
     PCB *prev = q;
-    while(q->next != NULL) {
-        if(toAdd->pid < q->pid) {
-            // add it since it's less than the next node
-            prev->next = toAdd;
-            toAdd->next = q;
-            return;
+    while(q != NULL) {
+        if(q->next != NULL) {
+            if(toAdd->pid < q->pid) {
+                // add it since it's less than the next node
+                prev->next = toAdd;
+                toAdd->next = q;
+                return;
+            }
         }
         prev = q;
-        q = q->next;
+        if(q != NULL) {
+            q = q->next;
+        }
     }
     // otherwise, it's the highest pid and goes on the end
     q->next = toAdd;
