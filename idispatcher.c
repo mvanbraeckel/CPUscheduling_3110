@@ -124,7 +124,7 @@ int main( int argc, char *argv[] ) {
         parseInputLine(line, &prevTime, &currTime, &event, &resourceNum, &pid);
 
         // make sure input is valid
-        if(currTime < prevTime || currTime >= 0) {
+        if(currTime < prevTime || currTime < 0) {
             fprintf(stderr, "Error: local time stamp must be a strictly-increasing, non-negative integer - input line will be ignored\n");
             continue;
         } else if(resourceNum < 1 || resourceNum > 5) {
