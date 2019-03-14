@@ -99,40 +99,15 @@ int main( int argc, char *argv[] ) {
     int resourceNum = -1;
     int pid = 0;
     
-    int counter = 0;
     // continue getting input until a blank line is entered
     while(1) {
-        counter++;
         fgets(line, 102, stdin);
         flushInput(line);
         // if input line is blank (an empty string), stop
-        if(line[0] == '\0') {
-            break;
-        }
+        if(line[0] == '\0') break;
 
         // parse input (time, event (& maybe resource #), process ID (if it's not T))
         parseInputLine(line, &prevTime, &currTime, &event, &resourceNum, &pid);
-
-        // print testing output
-        /*if(event == 'T') {
-            printf("line = '%s'\t--> time = %5d | time diff = %5d | event = %c\n", 
-                line, currTime, currTime-prevTime, event);
-        } else {
-            printf("line = '%s'\t--> time = %5d | time diff = %5d | event = %c", 
-                line, currTime, currTime-prevTime, event);
-            // print the resource number if necessary
-            if(event == 'R' || event == 'I') {
-                printf(" %d", resourceNum);
-            } else {
-                printf("  ");
-            }
-            printf(" | pid = %d\n", pid);
-        }*/
-
-        /*PCB *tester = createPCB(currTime, pid);
-        printf("PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
-                tester->pid, tester->prevTime, tester->runTime, tester->readyTime, tester->blockTime);
-        deletePCB(&tester);*/
 
         // based on command, update time and then execute functionality
         if(event == 'C') {          // ========================== C ==========================
@@ -143,18 +118,17 @@ int main( int argc, char *argv[] ) {
             } else if(pid < 0) {
                 fprintf(stderr, "Error: process ID must be a non-negative integer - input line will be ignored\n");
                 continue;
-            } // else, it was good input
+            }
             
             // create new process
             PCB *newPCB = createPCB(currTime, pid);
             // if a process is not running, update idle time and make it run
+            // otherwise, add it to the end of the ready queue
             if(runningProcess == NULL) {
                 idleTime += currTime - prevTime;
                 newPCB->status = RUNNING;
                 runningProcess = newPCB;
-            }
-            // otherwise, add it to the end of the ready queue
-            else {
+            } else {
                 newPCB->status = READY;
                 pushBack(&queues[0], newPCB);
             }
@@ -167,16 +141,16 @@ int main( int argc, char *argv[] ) {
             } else if(pid < 0) {
                 fprintf(stderr, "Error: process ID must be a non-negative integer - input line will be ignored\n");
                 continue;
-            } // else, it was good input
+            }
 
             // find the given process, update time, then remove and add to the done queue
             if(runningProcess != NULL && runningProcess->pid == pid) {
                 // update total run time first
                 runningProcess->runTime += currTime - runningProcess->prevTime;
                 runningProcess->prevTime = currTime;
-                // stop running, put in done queue
+                // stop running (set it back to system idle process 0), put in done queue
                 PCB *done = runningProcess;
-                runningProcess = NULL;      //set it to system idle process 0
+                runningProcess = NULL;
                 done->status = TERMINATED;
                 insertSorted(&queues[6], done);
 
@@ -209,6 +183,7 @@ int main( int argc, char *argv[] ) {
                 }
                 // wasn't in ready queue, so search each resource queue
                 else {
+                    int foundMatch = 0;
                     for(int i = 1; i < 6; i++) {
                         done = popID(&queues[i], pid);
                         if(done != NULL) {
@@ -218,18 +193,13 @@ int main( int argc, char *argv[] ) {
                             // put in done queue
                             done->status = TERMINATED;
                             insertSorted(&queues[6], done);
+                            foundMatch = 1;
                             break;
                         }
                     }
+                    if(foundMatch) continue;
                     // if it reaches here, pid DNE, so display error message, ignore line
                     fprintf(stderr, "Error: process ID %d does not exist --ignoring input line\n", pid);
-                    /*PCB *temp = createPCB(currTime, pid);
-                    if(temp->pid < 0) {
-                        temp->pid -= counter;
-                    } else {
-                        temp->pid *= -1 * counter;
-                    }
-                    insertSorted(&queues[6], temp);*/
                 }
             }
 
@@ -244,16 +214,16 @@ int main( int argc, char *argv[] ) {
             } else if(pid < 0) {
                 fprintf(stderr, "Error: process ID must be a non-negative integer - input line will be ignored\n");
                 continue;
-            } // else, it was good input
+            }
 
             // find the given process, update time, then remove and add to the specified resource queue
             if(runningProcess != NULL && runningProcess->pid == pid) {
                 // update total run time first
                 runningProcess->runTime += currTime - runningProcess->prevTime;
                 runningProcess->prevTime = currTime;
-                // stop running, put in specified resource queue
+                // stop running (set back to system idle), put in specified resource queue
                 PCB *toBlock = runningProcess;
-                runningProcess = NULL;      //set it to system idle process 0
+                runningProcess = NULL;
                 toBlock->status = BLOCKED;
                 pushBack(&queues[resourceNum], toBlock);
 
@@ -285,6 +255,7 @@ int main( int argc, char *argv[] ) {
                 }
                 // wasn't in ready queue, so search each resource queue
                 else {
+                    int foundMatch = 0;
                     for(int i = 1; i < 6; i++) {
                         toBlock = popID(&queues[i], pid);
                         if(toBlock != NULL) {
@@ -294,18 +265,13 @@ int main( int argc, char *argv[] ) {
                             // put in specified resource queue
                             toBlock->status = BLOCKED;
                             pushBack(&queues[resourceNum], toBlock);
+                            foundMatch = 1;
                             break;
                         }
                     }
+                    if(foundMatch) continue;
                     // if it reaches here, pid DNE, so display error message, ignore line
                     fprintf(stderr, "Error: process ID %d does not exist --ignoring input line\n", pid);
-                    /*PCB *temp = createPCB(currTime, pid);
-                    if(temp->pid < 0) {
-                        temp->pid -= counter;
-                    } else {
-                        temp->pid *= -1 * counter;
-                    }
-                    insertSorted(&queues[6], temp);*/
                 }
             }
 
@@ -320,7 +286,7 @@ int main( int argc, char *argv[] ) {
             } else if(pid < 0) {
                 fprintf(stderr, "Error: process ID must be a non-negative integer - input line will be ignored\n");
                 continue;
-            } // else, it was good input
+            }
 
             // remove specified process from specified resource queue, then add to ready queue
             PCB *fromRQ = NULL;
@@ -349,8 +315,8 @@ int main( int argc, char *argv[] ) {
             if(currTime < prevTime || currTime < 0) {
                 fprintf(stderr, "Error: local time stamp must be a strictly-increasing, non-negative integer - input line will be ignored\n");
                 continue;
-            } // else, it was good input
-            
+            }
+
             // check if a process is running first
             if(runningProcess == NULL || queues[0] == NULL) {
                 continue;
@@ -361,7 +327,7 @@ int main( int argc, char *argv[] ) {
             runningProcess->prevTime = currTime;
             // put the running process in the ready queue
             PCB *ready = runningProcess;
-            runningProcess = NULL;      //set it to system idle process 0
+            runningProcess = NULL;      //set it to system idle process 0 temporarily
             ready->status = READY;
             pushBack(&queues[0], ready);
 
@@ -380,21 +346,7 @@ int main( int argc, char *argv[] ) {
         } else {                    // ========================= ELSE ========================
             // display error message, and ignore line
             fprintf(stderr, "Error: invalid event --ignoring input line\n");
-
-            /*PCB *temp = createPCB(currTime, pid);
-            if(temp->pid < 0) {
-                temp->pid -= counter;
-            } else {
-                temp->pid *= -1 * counter;
-            }
-            insertSorted(&queues[6], temp);*/
-        }
-
-        //insertSorted(&queues[0], tester);
-        /*if(queues[0] == NULL) {
-            printf("\tis NULL\n");
-        }*/
-
+        } // end if statement
     } // end while loop
 
     // test that popID works if it's not found
