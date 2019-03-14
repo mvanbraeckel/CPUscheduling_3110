@@ -255,7 +255,7 @@ int main( int argc, char *argv[] ) {
                 continue;
             } // else, it was good input
 
-            // find the given process, update time, then remove and add to the specified resource queue
+            /*// find the given process, update time, then remove and add to the specified resource queue
             if(runningProcess->pid == pid) {
                 // update total run time first
                 runningProcess->runTime += currTime - runningProcess->prevTime;
@@ -316,7 +316,7 @@ int main( int argc, char *argv[] ) {
                     }
                     insertSorted(&queues[6], temp);
                 }
-            }
+            }*/
 
         } else if(event == 'I') {   // ========================== I ==========================
             // make sure input is valid
