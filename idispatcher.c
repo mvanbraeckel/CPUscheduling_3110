@@ -69,7 +69,7 @@ PCB* createPCB(int currTime, int pid);
 void deletePCB(PCB *toDelete);
 void deleteQueue(PCB *queue);
 void pushBack(PCB *queue, PCB *toAdd);
-
+void insertSorted(PCB *queue, PCB *toAdd);
 PCB* popFront(PCB *queue);
 PCB* popID(PCB *queue, int pid);
 
@@ -81,7 +81,7 @@ void flushInput(char* input);
 
 //* create a PCB linked list node struct (it will store all the necessary data)
 //*      --> stores: prevTime, runTime, readyTime, blockTime, pid
-//**^^ create helpers to push, pop (front and based on pid), and insert_sorted (for final output)
+//***^ create helpers to push, pop (front and based on pid), and insert_sorted (for final output)
 
 //* need a var to store running PCB
 //* need a var to track total running time of the default system-idle process (process/pid=0)
@@ -211,6 +211,38 @@ void pushBack(PCB *queue, PCB *toAdd) {
 }
 
 /**
+ * Adds a process to a queue, sorted by process ID (ascending order)
+ * @param PCB *queue -the queue being added to
+ * @param PCB *toAdd -the process being added
+ */
+void insertSorted(PCB *queue, PCB *toAdd) {
+    // if it's empty, set as first node in list
+    if(queue == NULL) { 
+        queue = toAdd;
+        return;
+    }
+    // traverse to end of queue and add the node there (queue pointer remains the same)
+    PCB *q = queue;
+    PCB *prev = q;
+    while(q->next != NULL) {
+        if(toAdd->pid <= q->pid) {
+            // if it's first (or only) element, need to reset front of the queue
+            if(queue = q) {
+                toAdd->next = q;
+                queue = toAdd;
+            } else {
+                prev->next = toAdd;
+                toAdd->next = q;
+            }
+        }
+        prev = q;
+        q = q->next;
+    }
+    // otherwise, it's the highest pid and goes on the end
+    q->next = toAdd;
+}
+
+/**
  * Pops and gets the front-most element of a queue
  * @param PCB *queue -the queue being accessed
  * @return the front-most element of the queue (not attached to the queue anymore),
@@ -244,10 +276,10 @@ PCB* popID(PCB *queue, int pid) {
     PCB *prev = q;
     while(q->next != NULL) {
         if(q->pid == pid) {
-            // if it's the first (or only) element need to reset front of the queue
+            // if it's the first (or only) element, need to reset front of the queue
             if(q == queue) {
                 return popFront(queue);
-            } else { // q->next == NULL
+            } else {
                 prev->next = q->next;
                 q->next = NULL;
                 return q;
@@ -258,8 +290,6 @@ PCB* popID(PCB *queue, int pid) {
     }
     return NULL;    // pid wasn't found
 }
-
-// create an insertSorted function
 
 // =============================== HELPER FUNCTIONS ===============================
 
