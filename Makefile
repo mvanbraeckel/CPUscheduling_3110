@@ -24,8 +24,8 @@ git: *.c Makefile
 	git remote add origin https://github.com/mvanbraeckel/CPUscheduling_3110.git
 	git push -u origin master
 
-val:
-	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./idispatcher<./test_inputs/test0.in
+val0:
+	valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all ./idispatcher
 
 clean:
 	rm -f *.o idispatcher
