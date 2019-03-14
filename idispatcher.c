@@ -154,6 +154,8 @@ int main( int argc, char *argv[] ) {
                 del->pid, del->prevTime, del->runTime, del->readyTime, del->blockTime);
     }
 
+    printf("\tdone popping\n");
+
     PCB *temp = queues[0];
     while(temp->next != NULL) {
         printf("PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
