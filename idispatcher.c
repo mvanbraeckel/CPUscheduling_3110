@@ -166,7 +166,7 @@ int main( int argc, char *argv[] ) {
             // find the given process, update time, then remove and add to the done queue
             if(runningProcess->pid == pid) {
                 // update total run time first
-                runningProcess->runTime += runningProcess->prevTime - currTime;
+                runningProcess->runTime += currTime - runningProcess->prevTime;
                 runningProcess->prevTime = currTime;
                 // stop running, put in done queue
                 PCB *done = runningProcess;
@@ -179,7 +179,7 @@ int main( int argc, char *argv[] ) {
                 toRun = popFront(&queues[0]);
                 if(toRun != NULL) {
                     // update total ready time first
-                    toRun->readyTime += toRun->prevTime - currTime;
+                    toRun->readyTime += currTime - toRun->prevTime;
                     toRun->prevTime = currTime;
                     // have it run
                     toRun->status = RUNNING;
@@ -193,7 +193,7 @@ int main( int argc, char *argv[] ) {
                 done = popID(&queues[0], pid);
                 if(done != NULL) {
                     // update total ready time first
-                    done->readyTime += done->prevTime - currTime;
+                    done->readyTime += currTime - done->prevTime;
                     done->prevTime = currTime;
                     // put in done queue
                     done->status = TERMINATED;
@@ -205,7 +205,7 @@ int main( int argc, char *argv[] ) {
                         done = popID(&queues[i], pid);
                         if(done != NULL) {
                             // update total blocked time first
-                            done->blockTime += done->prevTime - currTime;
+                            done->blockTime += currTime - done->prevTime;
                             done->prevTime = currTime;
                             // put in done queue
                             done->status = TERMINATED;
