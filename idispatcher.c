@@ -66,7 +66,7 @@ typedef struct linked_list_node_struct {
 // ============================== FUNCTION PROTOTYPES =============================
 
 PCB* createPCB(int currTime, int pid);
-void deletePCB(PCB *toDelete);
+void deletePCB(PCB **toDelete);
 void deleteQueue(PCB **queue);
 void pushBack(PCB **queue, PCB *toAdd);
 void insertSorted(PCB **queue, PCB *toAdd);
@@ -221,16 +221,15 @@ PCB* createPCB(int currTime, int pid) {
 }
 /**
  * Deletes (Frees) a process, sets it to NULL after freeing
- * @param PCB *toDelete -the PCB to be deleted
+ * @param PCB **toDelete -the PCB to be deleted
  */
-void deletePCB(PCB *toDelete) {
+void deletePCB(PCB **toDelete) {
     // make sure it exists first
-    if(toDelete == NULL) {
+    if(*toDelete == NULL) {
         return;
     }
-    PCB *temp = toDelete;
-    free(temp);
-    toDelete = NULL;
+    free(*toDelete);
+    *toDelete = NULL;
 }
 /**
  * Deletes (Frees) a queue of processes
