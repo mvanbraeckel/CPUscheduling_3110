@@ -143,6 +143,9 @@ int main( int argc, char *argv[] ) {
         //deletePCB(tester);
 
         pushBack(queues[0], tester);
+        if(queues[0] == NULL) {
+            printf("\tis NULL\n");
+        }
     }
     PCB *temp = queues[0];
     while(temp->next != NULL) {
