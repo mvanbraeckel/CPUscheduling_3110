@@ -149,7 +149,7 @@ int main( int argc, char *argv[] ) {
     }
 
     for(int i = 0; i < 4; i++) {
-        PCB *del = popFront(queues[0]);
+        PCB *del = popFront(&queues[0]);
         printf("PCB id = %2d | prevTime = %5d | runTime = %5d | readyTime = %5d | blockTime = %5d\n",
                 del->pid, del->prevTime, del->runTime, del->readyTime, del->blockTime);
     }
