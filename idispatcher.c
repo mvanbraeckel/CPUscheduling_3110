@@ -318,7 +318,10 @@ int main( int argc, char *argv[] ) {
             }
 
             // check if a process is running first
-            if(runningProcess == NULL || queues[0] == NULL) {
+            if(runningProcess == NULL) {
+                idleTime += currTime - prevTime;
+                continue;
+            } else if(queues[0] == NULL) {
                 continue;
             }
 

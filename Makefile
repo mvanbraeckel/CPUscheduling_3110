@@ -15,10 +15,12 @@ git: *.c Makefile
 	git add Makefile
 	git add test_inputs
 	git add test_outputs
+	git add pri_test_inputs
+	git add pri_test_outputs
 	git add *.pdf
 	git add *.md
 	git add *.c
-	git add test_code.sh
+	git add *.sh
 	git commit -m "automatic backup via makefile"
 	git remote rm origin
 	git config credential.helper store
