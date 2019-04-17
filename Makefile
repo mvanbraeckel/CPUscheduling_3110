@@ -6,7 +6,7 @@
 CC = gcc
 CFLAGS = -g -Wall -std=c99
 
-all: idispatcher git
+all: idispatcher
 
 idispatcher: idispatcher.c
 	$(CC) $(CFLAGS) idispatcher.c -o idispatcher
